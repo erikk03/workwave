@@ -43,13 +43,13 @@
     align-items: center;
     justify-content: center;
     border-radius:10px;
-    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.332);
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.137);
     transition: transform 0.3s, box-shadow 0.3s;
   }
   
   .block:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.552);
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.199);
   }
   
   .blockHeader {
