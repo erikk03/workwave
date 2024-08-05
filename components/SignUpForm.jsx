@@ -51,18 +51,18 @@ export default function SignUpForm() {
     
     return(
         <div className="grid place-items-center h-screen">
-            <div className="shadow-lg p-5 rounded-lg border-t-4 border-green-400">
+            <div className="shadow-2xl p-5 rounded-lg border-t-4 border-blue-900">
                 <h1 className="text-center text-xl font-bold my-4">Create an account!</h1>
 
                 <form onSubmit ={handleSubmit} className="flex flex-col gap-3">
-                    <input onChange={e => setFirstName(e.target.value)} type="text" placeholder="First Name" />
-                    <input onChange={e => setLastName(e.target.value)} type="text" placeholder="Last Name" />
-                    <input onChange={e => setEmail(e.target.value)} type="text" placeholder="Email" />
-                    <input onChange={e => setPhone(e.target.value)} type="text" placeholder="Phone Number" />
-                    <input onChange={e => setPassword(e.target.value)} type="password" placeholder="Password" />
-                    <input onChange={e => setConfirmPassword(e.target.value)} type="password" placeholder="Confirm Password" />
+                    <input className="rounded-lg" onChange={e => setFirstName(e.target.value)} type="text" placeholder="First Name" />
+                    <input className="rounded-lg" onChange={e => setLastName(e.target.value)} type="text" placeholder="Last Name" />
+                    <input className="rounded-lg" onChange={e => setEmail(e.target.value)} type="text" placeholder="Email" />
+                    <input className="rounded-lg" onChange={e => setPhone(e.target.value)} type="text" placeholder="Phone Number" />
+                    <input className="rounded-lg" onChange={e => setPassword(e.target.value)} type="password" placeholder="Password" />
+                    <input className="rounded-lg" onChange={e => setConfirmPassword(e.target.value)} type="password" placeholder="Confirm Password" />
                     
-                    <button className="bg-green-400 text-white py-2 rounded-lg">
+                    <button className="bg-blue-900 text-white py-2 rounded-lg">
                         Sign Up
                     </button>
 

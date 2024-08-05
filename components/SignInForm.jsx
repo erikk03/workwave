@@ -4,13 +4,13 @@ import React from "react";
 export default function SignInForm() {
     return( 
         <div className="grid place-items-center h-screen">
-            <div className="shadow-lg p-5 rounded-lg border-t-4 border-green-400">
+            <div className="shadow-2xl p-5 rounded-lg border-t-4 border-blue-900">
                 <h1 className="text-center text-xl font-bold my-4">Sign In</h1>
 
                 <form className="flex flex-col gap-3">
-                    <input type="text" placeholder="Email" />
-                    <input type="password" placeholder="Password" />
-                    <button className="bg-green-400 text-white py-2 rounded-lg">
+                    <input className="rounded-lg" type="text" placeholder="Email" />
+                    <input className="rounded-lg" type="password" placeholder="Password" />
+                    <button className="bg-blue-900 text-white py-2 rounded-lg">
                         Sign In
                     </button>
                     
