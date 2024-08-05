@@ -15,7 +15,7 @@
     height: 100%;
     top: 0;
     left: 0;
-    z-index: -1;
+    z-index: 0;
     background: url('/wave.svg') no-repeat center center;
     background-size: cover;
   }
@@ -24,6 +24,7 @@
     font-size: 3.0em;
     color: #ffffff;
     margin-bottom: 100px;
+    text-shadow: #000000 5px 2px 10px;
   }
   
   .blocksContainer {
@@ -42,13 +43,13 @@
     align-items: center;
     justify-content: center;
     border-radius:10px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.466);
+    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.332);
     transition: transform 0.3s, box-shadow 0.3s;
   }
   
   .block:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.463);
+    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.552);
   }
   
   .blockHeader {
