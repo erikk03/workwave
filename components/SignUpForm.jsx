@@ -24,6 +24,30 @@ export default function SignUpForm() {
             return;
         }
     
+        
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9]).{8,}$/;
+
+        if (!passwordRegex.test(Password)) {
+            setError("Password must have at least one uppercase letter, one symbol, one number, and be more than 8 characters");
+            return;
+        }
+
+        if (Password !== ConfirmPassword) {
+            setError("Passwords do not match");
+            return;
+        }
+
+        if (Phone.length !== 10) {
+            setError("Phone number must be 10 digits");
+            return;
+        }
+        
+        const emailRegex = /^[A-Za-z0-9._%+-]+@(gmail|yahoo)\.(com|gr)$/;
+        if (!emailRegex.test(Email)) {
+            setError("Invalid email format");
+            return;
+        }
+        
         try {
 
             const resUserExist = await fetch("api/userExists", {
