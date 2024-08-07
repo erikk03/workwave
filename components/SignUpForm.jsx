@@ -28,7 +28,20 @@ export default function SignUpForm() {
         const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9]).{8,}$/;
 
         if (!passwordRegex.test(Password)) {
-            setError("Password must have at least one uppercase letter, one symbol, one number, and be more than 8 characters");
+            let error = "Password must ";
+            if (!/(?=.*[A-Z])/.test(Password)) {
+                error += "have at least one uppercase letter";
+            }
+            if (!/(?=.*[!@#$&*])/.test(Password)) {
+                error += "have at least one symbol";
+            }
+            if (!/(?=.*[0-9])/.test(Password)) {
+                error += "have at least one number";
+            }
+            if (Password.length < 8) {
+                error += "be more than 8 characters";
+            }
+            setError(error);
             return;
         }
 
@@ -42,7 +55,7 @@ export default function SignUpForm() {
             return;
         }
         
-        const emailRegex = /^[A-Za-z0-9._%+-]+@(gmail|yahoo)\.(com|gr)$/;
+        const emailRegex = /^[A-Za-z0-9._%+-]+@(gmail|yahoo|di.uoa|uoa)\.(com|gr)$/;
         if (!emailRegex.test(Email)) {
             setError("Invalid email format");
             return;
