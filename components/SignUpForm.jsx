@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import {useState} from 'react';
 
+import { useRouter } from 'next/navigation';
+
 export default function SignUpForm() {
     const [FirstName, setFirstName] = useState("");
     const [LastName, setLastName] = useState("");
@@ -11,6 +13,8 @@ export default function SignUpForm() {
     const [Password, setPassword] = useState("");
     const [ConfirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
+
+    const router = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -21,6 +25,22 @@ export default function SignUpForm() {
         }
     
         try {
+
+            const resUserExist = await fetch("api/userExists", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ Email }),
+            });
+
+            const { user } = await resUserExist.json();
+
+            if(user) {
+                setError("User already exists");
+                return;
+            }
+
             const res = await fetch("api/signup", {
                 method: "POST",
                 headers: {
@@ -39,6 +59,7 @@ export default function SignUpForm() {
             if(res.ok) {
                 const form = e.target;
                 form.reset();
+                router.push("/signin"); //redirect to signin page after successful signup
             }
             else {
                 console.log("Error during sign up");
@@ -73,7 +94,7 @@ export default function SignUpForm() {
                     )}
 
                     <Link className="text-sm mt-3 text-right" href={"/signin"}>
-                        Already have an accout? &nbsp;
+                        Already have an account? &nbsp;
                         <span className="underline">SignIn</span>
                     </Link>
                 </form>
