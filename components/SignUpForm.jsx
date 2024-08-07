@@ -24,19 +24,29 @@ export default function SignUpForm() {
             return;
         }
     
+        const emailRegex = /^[A-Za-z0-9._%+-]+@(gmail|yahoo|di.uoa|uoa)\.(com|gr)$/;
+        if (!emailRegex.test(Email)) {
+            setError("Invalid email format");
+            return;
+        }
         
+        if (Phone.length !== 10) {
+            setError("Phone number must be 10 digits");
+            return;
+        }
+                
         const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9]).{8,}$/;
 
         if (!passwordRegex.test(Password)) {
             let error = "Password must ";
             if (!/(?=.*[A-Z])/.test(Password)) {
-                error += "have at least one uppercase letter";
+                error += "have at least one uppercase letter ";
             }
             if (!/(?=.*[!@#$&*])/.test(Password)) {
-                error += "have at least one symbol";
+                error += "have at least one symbol ";
             }
             if (!/(?=.*[0-9])/.test(Password)) {
-                error += "have at least one number";
+                error += "have at least one number ";
             }
             if (Password.length < 8) {
                 error += "be more than 8 characters";
@@ -49,17 +59,7 @@ export default function SignUpForm() {
             setError("Passwords do not match");
             return;
         }
-
-        if (Phone.length !== 10) {
-            setError("Phone number must be 10 digits");
-            return;
-        }
         
-        const emailRegex = /^[A-Za-z0-9._%+-]+@(gmail|yahoo|di.uoa|uoa)\.(com|gr)$/;
-        if (!emailRegex.test(Email)) {
-            setError("Invalid email format");
-            return;
-        }
         
         try {
 
