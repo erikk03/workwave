@@ -38,22 +38,30 @@ export default function SignUpForm() {
         const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9]).{8,}$/;
 
         if (!passwordRegex.test(Password)) {
-            let error = "Password must ";
+            let error = "Password must have:\n";
+            let conditions = [];
+        
             if (!/(?=.*[A-Z])/.test(Password)) {
-                error += "have at least one uppercase letter ";
+                conditions.push(" - at least one uppercase letter");
             }
             if (!/(?=.*[!@#$&*])/.test(Password)) {
-                error += "have at least one symbol ";
+                conditions.push(" - at least one symbol");
             }
             if (!/(?=.*[0-9])/.test(Password)) {
-                error += "have at least one number ";
+                conditions.push(" - at least one number");
             }
             if (Password.length < 8) {
-                error += "be more than 8 characters";
+                conditions.push(" - at least 8 characters");
             }
-            setError(error);
+
+            if (conditions.length > 0) {
+                error += conditions.join("\n");
+                setError(error);
+            }
+        
             return;
         }
+        
 
         if (Password !== ConfirmPassword) {
             setError("Passwords do not match");
@@ -125,7 +133,7 @@ export default function SignUpForm() {
                     </button>
 
                     { error && (
-                    <div className="bg-red-500 text-white w-fit text-sm py-1 px-3 rounded-md mt-2">
+                    <div className="bg-red-500 text-white w-fit text-sm py-1 px-3 rounded-md mt-2 " style={{ whiteSpace: 'pre-line' }}>
                         {error}
                     </div>
                     )}
