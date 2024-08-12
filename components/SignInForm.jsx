@@ -7,8 +7,8 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function SignInForm() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [Email, setEmail] = useState("");
+    const [Password, setPassword] = useState("");
     const [error, setError] = useState("");
 
     const router = useRouter();
@@ -18,8 +18,8 @@ export default function SignInForm() {
 
         try {
             const res = await signIn("credentials", {
-                email, 
-                password, 
+                Email, 
+                Password, 
                 redirect: false,
             });
 
