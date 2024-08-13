@@ -4,7 +4,7 @@ const nextConfig = {
         remotePatterns :[
             {
                 protocol: 'https',
-                hostname: 'linkedinsdi2100043.blob.core.windows.net',
+                hostname: 'workwaveblob1.blob.core.windows.net',
             }
         ]
     },
