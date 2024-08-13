@@ -6,7 +6,7 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 export default async function SignUp() {
     const session = await getServerSession(authOptions);
 
-    if (session) redirect("/dashboard");
+    if (session) redirect("/feed");
 
     return <SignUpForm/>;
 }

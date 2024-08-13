@@ -1,54 +1,3 @@
-// import { connectMongoDB } from "@/lib/mongodb";
-// import User from "@/models/user";
-// import NextAuth from "next-auth/next";
-// import CredentialsProvider from "next-auth/providers/credentials";
-// import bcrypt from "bcryptjs";
-
-// export const authOptions = {
-//   providers: [
-//     CredentialsProvider({
-//       name: "credentials",
-//       credentials: {},
-
-//       async authorize(credentials) {
-//         const { Email, Password } = credentials;
-
-//         try {
-//           await connectMongoDB();
-//           const user = await User.findOne({ Email });
-
-//           if (!user) {
-//             console.log("User not found");
-//             return null;
-//           }
-
-//           const passwordsMatch = await bcrypt.compare(Password, user.Password);
-
-//           if (!passwordsMatch) {
-//             return null;
-//           }
-
-//           return user;
-//         } catch (error) {
-//           console.log("Error: ", error);
-//         }
-//       },
-//     }),
-//   ],
-//   session: {
-//     strategy: "jwt",
-//   },
-//   secret: process.env.NEXTAUTH_SECRET,
-//   pages: {
-//     signIn: "/",
-//   },
-// };
-
-// const handler = NextAuth(authOptions);
-
-// export { handler as GET, handler as POST };
-
-
 import { connectMongoDB } from "@/lib/mongodb";
 import User from "@/models/user";
 import NextAuth from "next-auth/next";
@@ -62,18 +11,18 @@ export const authOptions = {
       credentials: {},
 
       async authorize(credentials) {
-        const { Email, Password } = credentials;
+        const { email, password } = credentials;
 
         try {
           await connectMongoDB();
-          const user = await User.findOne({ Email });
+          const user = await User.findOne({ email });
 
           if (!user) {
             console.log("User not found");
             return null;
           }
 
-          const passwordsMatch = await bcrypt.compare(Password, user.Password);
+          const passwordsMatch = await bcrypt.compare(password, user.password);
 
           if (!passwordsMatch) {
             return null;
@@ -82,9 +31,12 @@ export const authOptions = {
           // Return user object with relevant fields
           return {
             id: user._id,
-            FirstName: user.FirstName,
-            Email: user.Email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            profileImage: user.profileImage,
           };
+          
         } catch (error) {
           console.log("Error: ", error);
           return null;
@@ -102,15 +54,19 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.FirstName = user.FirstName;
-        token.Email = user.Email;
+        token.firstName = user.firstName;
+        token.lastName = user.lastName;
+        token.email = user.email;
+        token.profileImage = user.profileImage;
       }
       return token;
     },
     async session({ session, token }) {
       if (token) {
-        session.user.FirstName = token.FirstName;
-        session.user.Email = token.Email;
+        session.user.firstName = token.firstName;
+        session.user.lastName = token.lastName;
+        session.user.email = token.email;
+        session.user.profileImage = token.profileImage;
       }
       return session;
     },
