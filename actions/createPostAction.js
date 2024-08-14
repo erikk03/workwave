@@ -1,6 +1,6 @@
 'use server';
 
-import { Post } from "@/models/post";
+import Post from "@/models/post";
 import { BlobServiceClient } from "@azure/storage-blob";
 import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
@@ -22,7 +22,7 @@ export default async function createPostAction(formData, session) {
     }
 
     const userDB = {
-        userId: user.id,
+        userId: user.userId,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,

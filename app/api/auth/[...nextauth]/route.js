@@ -16,7 +16,7 @@ export const authOptions = {
         try {
           await connectMongoDB();
           const user = await User.findOne({ email });
-
+          
           if (!user) {
             console.log("User not found");
             return null;
@@ -30,7 +30,7 @@ export const authOptions = {
 
           // Return user object with relevant fields
           return {
-            id: user._id,
+            userId: user._id.toString(),
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
@@ -55,6 +55,7 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        token.userId = user.userId;
         token.firstName = user.firstName;
         token.lastName = user.lastName;
         token.email = user.email;
@@ -65,6 +66,7 @@ export const authOptions = {
     },
     async session({ session, token }) {
       if (token) {
+        session.user.userId = token.userId;
         session.user.firstName = token.firstName;
         session.user.lastName = token.lastName;
         session.user.email = token.email;

@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import User from "./user";
 // import Comment from "./comment"; // Uncomment if you need to use comments
 
 const { Schema, model, models } = mongoose;
