@@ -2,6 +2,8 @@
 
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
+import { Avatar } from "@nextui-org/avatar";
+import { Button } from "@nextui-org/react";
 
 export default function UserInfo() {
   const { data: session, status } = useSession();
@@ -18,14 +20,24 @@ export default function UserInfo() {
     <div className="grid place-items-center h-screen">
       <div className="shadow-2xl p-5 rounded-lg border-t-4 border-blue-900 bg-zinc-300/10 flex flex-col gap-3 my-6">
         {session?.user?.profileImage ? (
-          <img
-            src={session.user.profileImage}
-            alt="User Image"
-            className="w-24 h-24 rounded-full mx-auto mb-4"
+          <Avatar
+              isBordered
+              color="primary"
+              size="lg"
+              radius="full"
+              className="w-24 h-24 mx-auto mb-4"
+              src={session?.user?.profileImage}
           />
-        ): (
-          <div>No profile image available</div>
-        )}
+        ):(
+          <Avatar
+              isBordered
+              color=""
+              size="lg"
+              radius="full"
+              className="w-24 h-24 mx-auto mb-4"
+              name={session?.user?.firstName.charAt(0) + session?.user?.lastName.charAt(0)}
+          />
+          )}
 
         <div>
           Name: <span className="font-bold">{session?.user?.firstName + " " + session?.user?.lastName}</span>
@@ -33,12 +45,17 @@ export default function UserInfo() {
         <div>
           Email: <span className="font-bold">{session?.user?.email}</span>
         </div>
-        <button
+
+        <Button
           onClick={() => signOut()}
-          className="bg-red-500 text-white w-fit text-sm px-4 py-1 rounded-md mt-2 mx-auto"
+          color="danger"
+          size="sm"
+          radius="sm"
+          variant="ghost"
+          className="w-fit text-sm mx-auto"
         >
           Log Out
-        </button>
+        </Button>
       </div>
     </div>
   );

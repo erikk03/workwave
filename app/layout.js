@@ -1,6 +1,6 @@
 import { Inter } from "next/font/google";
 import "../styles/global.css";
-import { AuthProvider } from "./Providers";
+import { Providers } from "./Providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,7 +11,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className='light'>
       <head>
         <title>WorkWave</title>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,9 +19,9 @@ export default function RootLayout({ children }) {
         <link href="https://fonts.googleapis.com/css2?family=Zain&display=swap" rel="stylesheet" />
       </head>
       <body>
-        <AuthProvider>
+        <Providers>
           {children}
-        </AuthProvider>
+        </Providers>
       </body>
     </html>
   );
