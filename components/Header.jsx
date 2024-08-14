@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useState } from 'react';
+import {Avatar} from "@nextui-org/avatar";
+import {Button} from "@nextui-org/react";
 
 export default function Header() {
     const { data: session, status } = useSession();
@@ -62,26 +64,46 @@ export default function Header() {
 
                 <div className="relative">
                     
-                        <div onClick={toggleDropdown} className="cursor-pointer">
-                        {session?.user?.profileImage && (
-                            <Image
-                                className="rounded-full"
-                                src={session.user.profileImage}
-                                width={30}
-                                height={30}
-                                alt="profile"
-                            />
-                        )}
+                    <div onClick={toggleDropdown} className="cursor-pointer">
+                    {session?.user?.profileImage ? (
+                        <Avatar
+                            isBordered
+                            color=""
+                            size="sm"
+                            radius="full"
+                            src={session?.user?.profileImage}
+                        />
+                    ):(
+                        <Avatar
+                            isBordered
+                            color=""
+                            size="sm"
+                            radius="full"
+                            name={session?.user?.firstName.charAt(0) + session?.user?.lastName.charAt(0)}
+                        />
+                    )}
                     </div>
 
                     {dropdownVisible && (
-                        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg">
+                        <div className="absolute right-1 mt-2 w-40 bg-white border border-gray-300 rounded shadow-xl">
                             <Link href="/userinfo" legacyBehavior>
-                                <a className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Profile Information</a>
+                                <a className="block px-4 py-2 text-gray-800 hover:bg-gray-300">Profile Information</a>
                             </Link>
                             <Link href=""legacyBehavior>
-                                <a className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Profile Settings</a>
+                                <a className="block px-4 py-2 text-gray-800 hover:bg-gray-300">Profile Settings</a>
                             </Link>
+                            <a className="flex px-4 py-2 justify-center">
+                            <Button
+                                onClick={() => signOut()}
+                                color="danger"
+                                size="sm"
+                                radius="sm"
+                                variant="ghost"
+                                className=" w-fit text-sm mx-auto"
+                            >
+                                Log Out
+                            </Button>
+                            </a>
                         </div>
                     )}
 
