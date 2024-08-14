@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import { useState } from 'react';
 import {Avatar} from "@nextui-org/avatar";
 import {Button} from "@nextui-org/react";
+import { signOut } from "next-auth/react";
 
 export default function Header() {
     const { data: session, status } = useSession();

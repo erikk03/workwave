@@ -6,7 +6,7 @@ import { ImageIcon, XIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
-// import createPostAction from "@/actions/createPostAction";
+import createPostAction from "@/actions/createPostAction";
 // import { toast } from "sonner";
 
 function PostForm() {
@@ -15,23 +15,23 @@ function PostForm() {
     const { data: session, status } = useSession();
     const [preview, setPreview] = useState(null);
 
-    // const handlePostAction = async (formData) => {
-    //     const formDataCopy = formData;
-    //     ref.current?.reset();
-    //     const text = formDataCopy.get("postInput").toString();
+    const handlePostAction = async (formData) => {
+        const formDataCopy = formData;
+        ref.current?.reset();
+        const text = formDataCopy.get("postInput")?.toString();
 
-    //     if (!text.trim()){
-    //         throw new Error("You must provide a post input");
-    //     }
+        if (!text.trim()){
+            throw new Error("You must provide a post input");
+        }
 
-    //     setPreview(null);
+        setPreview(null);
     
-    //     try {
-    //         await createPostAction(formDataCopy);
-    //     } catch (error) {
-    //         console.log('Error creating post: ', error);
-    //     }
-    // }
+        try {
+            await createPostAction(formDataCopy, session);
+        } catch (error) {
+            console.log('Error creating post: ', error);
+        }
+    }
 
     const handleImageChange = (event) => {
         const file = event.target.files?.[0];
@@ -45,14 +45,15 @@ function PostForm() {
         <div className="mb-2">
             <form
             ref={ref}
-            // action={(formData) => {
-            //     const promise = handlePostAction(formData);
-            //     toast.promise(promise, {
-            //         loading: "Creating post...",
-            //         success: "Post created!",
-            //         error: (e) => "Error creating post: " + e.message,
-            //     });
-            // }}
+            action={(formData) => {
+                // const promise = 
+                handlePostAction(formData);
+                // toast.promise(promise, {
+                //     loading: "Creating post...",
+                //     success: "Post created!",
+                //     error: (e) => "Error creating post: " + e.message,
+                // });
+            }}
             className="p-1 bg-white"
             >
                 <div className="flex items-center space-x-2">
@@ -120,7 +121,7 @@ function PostForm() {
                         onClick={() => fileInputRef.current?.click()}
                     >
                         <ImageIcon className="mr-2" size={18} color="currentColor" />
-                        {preview? "Change" : "Import"} Image
+                        {preview? "Change" : "Import"} Media
                     </Button>
 
                     {preview && (

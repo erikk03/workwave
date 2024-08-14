@@ -6,7 +6,7 @@ import { BlobServiceClient } from '@azure/storage-blob';
 import crypto from 'crypto';
 
 const accountName = process.env.ACCOUNT_NAME;
-const containerName = process.env.CONTAINER_NAME;
+const containerName = process.env.CONTAINER_NAME_1;
 const sasToken = process.env.SAS_TOKEN;
 
 const blobServiceClient = new BlobServiceClient(
