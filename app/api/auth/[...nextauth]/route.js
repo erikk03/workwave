@@ -35,6 +35,7 @@ export const authOptions = {
             lastName: user.lastName,
             email: user.email,
             profileImage: user.profileImage,
+            isAdmin: user.isAdmin,
           };
           
         } catch (error) {
@@ -58,6 +59,7 @@ export const authOptions = {
         token.lastName = user.lastName;
         token.email = user.email;
         token.profileImage = user.profileImage;
+        token.isAdmin = user.isAdmin;
       }
       return token;
     },
@@ -67,6 +69,7 @@ export const authOptions = {
         session.user.lastName = token.lastName;
         session.user.email = token.email;
         session.user.profileImage = token.profileImage;
+        session.user.isAdmin = token.isAdmin;
       }
       return session;
     },

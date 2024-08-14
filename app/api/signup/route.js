@@ -79,7 +79,8 @@ export async function POST(req) {
             email,
             phone,
             password: hashedPassword,
-            profileImage: imageUrl
+            profileImage: imageUrl,
+            isAdmin: false
         });
 
         return NextResponse.json(

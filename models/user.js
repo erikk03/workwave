@@ -26,6 +26,10 @@ const userSchema = new Schema({
         type: String, // URL of the profile image stored in Azure Blob Storage
         default: null // Default value if no image is uploaded
     },
+    isAdmin: {
+        type: Boolean,
+        default: false // Add this field to indicate admin status
+    }
 }, 
 { 
     timestamps: true 
