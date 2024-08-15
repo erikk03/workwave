@@ -24,12 +24,12 @@ function Post({post}) {
     <div className="bg-white rounded-xl border">
         <div className="p-4 flex space-x-2">
             <div>
-                {post?.user?.profileImage ? (
+                {post?.user?.userImage ? (
                     <Avatar
                         color=""
                         size="md"
                         radius="full"
-                        src={post?.user?.profileImage}
+                        src={post?.user?.userImage}
                     />
                 ):(
                     <Avatar
