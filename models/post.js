@@ -22,7 +22,7 @@ const PostSchema = new Schema(
     }
 );
 
-// Instance Methods (Uncomment and implement if needed)
+// Instance Methods
 
 // PostSchema.methods.likePost = async function (userId) {
 //     try {
@@ -75,24 +75,30 @@ const PostSchema = new Schema(
 PostSchema.statics.getAllPosts = async function () {
     try {
         const posts = await this.find()
-            .sort({ createdAt: -1 })
-            .populate({
-                path: "comments",
-                options: { sort: { createdAt: -1 } },
-            })
-            .lean(); // Convert Mongoose documents to plain JS objects
+        .sort({ createdAt: -1 })
+        // .populate({
+        //     path: "comments",
+        //     options: { sort: { createdAt: -1 } },
+        // })
+        .lean();
 
         return posts.map((post) => ({
             ...post,
             _id: post._id.toString(),
-            // Uncomment if you need to handle comments
+            // createdAt: post.createdAt.toISOString(),
+            // updatedAt: post.updatedAt.toISOString(),
             // comments: post.comments?.map((comment) => ({
             //     ...comment,
             //     _id: comment._id.toString(),
-            // })),
+            //     createdAt: comment.createdAt.toISOString(),
+            //     updatedAt: comment.updatedAt.toISOString(),
+            // })) || [], // Return an empty array if comments is undefined
         }));
+
     } catch (error) {
         console.log("error when getting all posts", error);
+        console.error('Error fetching posts:', error);
+        throw error;
     }
 };
 

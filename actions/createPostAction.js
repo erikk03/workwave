@@ -31,34 +31,37 @@ export default async function createPostAction(formData, session) {
 
     try {
         if (image && image.size > 0) {
-            console.log("Uploading image to blob storage", image);
 
+            // Get the Azure Storage account name, SAS token, and container name from environment variables
             const accountName = process.env.ACCOUNT_NAME;
             const sasToken = process.env.SAS_TOKEN;
             const containerName = process.env.CONTAINER_NAME_2;
 
+            // Create a BlobServiceClient using the account name and SAS token
             const blobServiceClient = new BlobServiceClient(
                 `https://${accountName}.blob.core.windows.net/?${sasToken}`
             );
 
+            // Get the container client for the specified container name
             const containerClient = blobServiceClient.getContainerClient(containerName);
-            console.log("Container client created", containerClient);
 
+            // Generate a unique file name for the image using a random UUID and timestamp
             const timestamp = new Date().getTime();
             const file_name = `${randomUUID()}_${timestamp}.png`;
 
+            // Get the block blob client for the file name
             const blockBlobClient = containerClient.getBlockBlobClient(file_name);
-            console.log("Block blob client created", blockBlobClient);
             
+            // Convert the image file to an ArrayBuffer
             const imageBuffer = await image.arrayBuffer();
-            console.log("Image buffer created", imageBuffer);
 
+            // Upload the image data to the block blob
             await blockBlobClient.uploadData(imageBuffer);
 
+            // Get the URL of the uploaded image
             image_url = blockBlobClient.url;
-            console.log("Image uploaded successfully", image_url);
-        
             
+            // Create a new post with the user information, post input, and image URL
             const body = {
                 user: userDB,
                 text: postInput,
@@ -66,9 +69,9 @@ export default async function createPostAction(formData, session) {
             };
             
             await Post.create(body);
-            console.log("Post created successfully");
-        }else{
+        } else {
 
+            // Create a new post with the user information and post input (no image)
             const body = {
                 user: userDB,
                 text: postInput,
@@ -77,9 +80,12 @@ export default async function createPostAction(formData, session) {
             await Post.create(body);
         }
 
+        console.log(">>> Post created succesfully!");
+    
     } catch (error) {
         throw new Error(`Error creating post: ${error.message}`);
     }
 
+    // Revalidate the cache for the home page
     revalidatePath("/");
 }

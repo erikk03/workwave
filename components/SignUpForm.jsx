@@ -11,7 +11,7 @@ export default function SignUpForm() {
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [profileImage, setProfileImage] = useState(null);
+    const [profileImage, setProfileImage] = useState("");
     const [error, setError] = useState("");
 
     const router = useRouter();
