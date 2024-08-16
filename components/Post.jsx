@@ -8,7 +8,7 @@ import { Trash2 } from "lucide-react";
 import ReactTimeago from "react-timeago";
 // import {Image} from "@nextui-org/image";
 import Image from "next/image"
-// import deletePostAction from "@/actions/deletePostAction";
+import deletePostAction from "@/actions/deletePostAction";
 // import PostOptions from "./PostOptions";
 // import { toast } from "sonner";
 
@@ -60,7 +60,6 @@ function Post({post}) {
 
                 </div>
                 
-
                 {isAuthor && (
                     <Button
                         style={{padding: "5px"}}
@@ -68,16 +67,16 @@ function Post({post}) {
                         size="sm"
                         radius="sm"
                         variant="faded" 
-                        // onClick={() => {
-                        //     // const promise = 
-                        //     deletePostAction(post.postId);
+                        onClick={() => {
+                            // const promise = 
+                            deletePostAction(post._id.toString(), session);
                             
-                        //     // toast.promise(promise, {
-                        //     //     loading: "Deleting post...",
-                        //     //     success: "Post deleted!",
-                        //     //     error: (e) => "Error deleting post: " + e.message,
-                        //     // });
-                        // }}
+                            // toast.promise(promise, {
+                            //     loading: "Deleting post...",
+                            //     success: "Post deleted!",
+                            //     error: (e) => "Error deleting post: " + e.message,
+                            // });
+                        }}
                         >
                         <Trash2 style={{padding: "5px"}}/>
                     </Button>

@@ -24,51 +24,52 @@ const PostSchema = new Schema(
 
 // Instance Methods
 
-// PostSchema.methods.likePost = async function (userId) {
-//     try {
-//         await this.updateOne({ $addToSet: { likes: userId } });
-//     } catch (error) {
-//         console.log("error when liking post", error);
-//     }
-// };
+PostSchema.methods.likePost = async function (userId) {
+    try {
+        await this.updateOne({ $addToSet: { likes: userId } });
+    } catch (error) {
+        console.log("error when liking post", error);
+    }
+};
 
-// PostSchema.methods.unlikePost = async function (userId) {
-//     try {
-//         await this.updateOne({ $pull: { likes: userId } });
-//     } catch (error) {
-//         console.log("error when unliking post", error);
-//     }
-// };
+PostSchema.methods.unlikePost = async function (userId) {
+    try {
+        await this.updateOne({ $pull: { likes: userId } });
+    } catch (error) {
+        console.log("error when unliking post", error);
+    }
+};
 
-// PostSchema.methods.removePost = async function () {
-//     try {
-//         await this.model("Post").deleteOne({ _id: this._id });
-//     } catch (error) {
-//         console.log("error when removing post", error);
-//     }
-// };
+PostSchema.methods.removePost = async function () {
+    try {
+        console.log("Removing post with id", this._id);
+        await this.model("Post").deleteOne({ _id: this._id });
+    } catch (error) {
+        console.log("error when removing post", error);
+    }
+};
 
-// PostSchema.methods.commentOnPost = async function (commentToAdd) {
-//     try {
-//         const comment = await Comment.create(commentToAdd);
-//         this.comments.push(comment._id);
-//         await this.save();
-//     } catch (error) {
-//         console.log("error when commenting on post", error);
-//     }
-// };
+PostSchema.methods.commentOnPost = async function (commentToAdd) {
+    try {
+        const comment = await Comment.create(commentToAdd);
+        this.comments.push(comment._id);
+        await this.save();
+    } catch (error) {
+        console.log("error when commenting on post", error);
+    }
+};
 
-// PostSchema.methods.getAllComments = async function () {
-//     try {
-//         await this.populate({
-//             path: "comments",
-//             options: { sort: { createdAt: -1 } },
-//         });
-//         return this.comments;
-//     } catch (error) {
-//         console.log("error when getting all comments", error);
-//     }
-// };
+PostSchema.methods.getAllComments = async function () {
+    try {
+        await this.populate({
+            path: "comments",
+            options: { sort: { createdAt: -1 } },
+        });
+        return this.comments;
+    } catch (error) {
+        console.log("error when getting all comments", error);
+    }
+};
 
 // Static Methods
 
@@ -85,13 +86,9 @@ PostSchema.statics.getAllPosts = async function () {
         return posts.map((post) => ({
             ...post,
             _id: post._id.toString(),
-            // createdAt: post.createdAt.toISOString(),
-            // updatedAt: post.updatedAt.toISOString(),
             // comments: post.comments?.map((comment) => ({
             //     ...comment,
             //     _id: comment._id.toString(),
-            //     createdAt: comment.createdAt.toISOString(),
-            //     updatedAt: comment.updatedAt.toISOString(),
             // })) || [], // Return an empty array if comments is undefined
         }));
 

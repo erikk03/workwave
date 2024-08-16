@@ -6,6 +6,7 @@ import PostForm from "@/components/PostForm";
 import PostFeed from "@/components/PostFeed";
 import Post from "@/models/post";
 import { connectMongoDB } from "@/lib/mongodb";
+import { updateImageUrls } from "@/lib/azureblob";
 
 export default async function Feed() {
 
@@ -14,6 +15,10 @@ export default async function Feed() {
 
   await connectMongoDB();
   const posts = await Post.getAllPosts();
+
+  // Update image URLs
+  await updateImageUrls();
+
 
   return (
     <div className="min-h-screen flex flex-col">
