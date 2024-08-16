@@ -35,7 +35,7 @@ export default async function createPostAction(formData, session) {
             // Get the Azure Storage account name, SAS token, and container name from environment variables
             const accountName = process.env.ACCOUNT_NAME;
             const sasToken = process.env.SAS_TOKEN;
-            const containerName = process.env.CONTAINER_NAME_2;
+            const containerName = process.env.CONTAINER_NAME_1;
 
             // Create a BlobServiceClient using the account name and SAS token
             const blobServiceClient = new BlobServiceClient(
