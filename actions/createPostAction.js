@@ -4,6 +4,7 @@ import Post from "@/models/post";
 import { BlobServiceClient } from "@azure/storage-blob";
 import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
+import { generateSasToken } from "@/lib/azureblob";
 
 export default async function createPostAction(formData, session) {
     const user = session?.user;
@@ -31,11 +32,16 @@ export default async function createPostAction(formData, session) {
 
     try {
         if (image && image.size > 0) {
-
+            
             // Get the Azure Storage account name, SAS token, and container name from environment variables
             const accountName = process.env.ACCOUNT_NAME;
-            const sasToken = process.env.SAS_TOKEN;
             const containerName = process.env.CONTAINER_NAME_2;
+
+            // Generate a unique file name for the image using a random UUID and timestamp
+            const timestamp = new Date().getTime();
+            const file_name = `${randomUUID()}_${timestamp}.png`;
+
+            const sasToken = generateSasToken(containerName, file_name);
 
             // Create a BlobServiceClient using the account name and SAS token
             const blobServiceClient = new BlobServiceClient(
@@ -44,10 +50,6 @@ export default async function createPostAction(formData, session) {
 
             // Get the container client for the specified container name
             const containerClient = blobServiceClient.getContainerClient(containerName);
-
-            // Generate a unique file name for the image using a random UUID and timestamp
-            const timestamp = new Date().getTime();
-            const file_name = `${randomUUID()}_${timestamp}.png`;
 
             // Get the block blob client for the file name
             const blockBlobClient = containerClient.getBlockBlobClient(file_name);
@@ -80,7 +82,7 @@ export default async function createPostAction(formData, session) {
             await Post.create(body);
         }
 
-        console.log(">>> Post created succesfully!");
+        console.log(">>> Post created successfully!");
     
     } catch (error) {
         throw new Error(`Error creating post: ${error.message}`);

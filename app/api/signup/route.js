@@ -4,10 +4,11 @@ import User from "@/models/user";
 import bcrypt from "bcryptjs";
 import { BlobServiceClient } from '@azure/storage-blob';
 import crypto from 'crypto';
+import { generateSasToken } from "@/lib/azureblob";
 
 const accountName = process.env.ACCOUNT_NAME;
 const containerName = process.env.CONTAINER_NAME_1;
-const sasToken = process.env.SAS_TOKEN;
+const sasToken = generateSasToken(containerName, accountName);
 
 const blobServiceClient = new BlobServiceClient(
     `https://${accountName}.blob.core.windows.net/?${sasToken}`
