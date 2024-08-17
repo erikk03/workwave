@@ -5,9 +5,9 @@ import { useSession } from "next-auth/react";
 import { HeartIcon, MessageCircle, Repeat2, Send } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@nextui-org/button";
+import CommentFeed from "./CommentFeed";
+import CommentForm from "./CommentForm";
 
-// import CommentFeed from "./CommentFeed";
-// import CommentForm from "./CommentForm";
 // import { toast } from "sonner";
 
 function PostOptions({postId, post}) {
@@ -81,10 +81,10 @@ function PostOptions({postId, post}) {
 
     return (
         <div>
-            <div className="flex justify-between">
+            <div className="flex justify-center">
                 <div>
                     {likes && likes.length >= 0 && (
-                    <p className="ml-2 mt-1 text-xs text-gray-700 cursor-pointer hover:underline">
+                    <p className="mr-1.5 mt-1 text-xs text-gray-700 cursor-pointer hover:underline">
                         {likes.length} likes
                     </p>
                     )}
@@ -94,7 +94,7 @@ function PostOptions({postId, post}) {
                     {post?.comments && post?.comments.length > 0 && (
                         <p
                             onClick={() => setIsCommentsOpen(!isCommentsOpen)}
-                            className="text-xs text-gray-500 cursor-pointer hover:underline"
+                            className="ml-1.5 mt-1 text-xs text-gray-700 cursor-pointer hover:underline"
                         >
                             {post.comments.length} comments
                         </p>
@@ -160,11 +160,9 @@ function PostOptions({postId, post}) {
             </div>
 
             {isCommentsOpen && (
-                <div className="p-4">
-                    {/* <SignedIn>
-                        <CommentForm postId={postId} />
-                    </SignedIn> */}
-                    {/* <CommentFeed post={post}   /> */}
+                <div className="p-2">
+                    <CommentForm postId={postId} />
+                    <CommentFeed post={post} />
                 </div>
             )}
         </div>

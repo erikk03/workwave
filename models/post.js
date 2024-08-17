@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-// import Comment from "./comment"; // Uncomment if you need to use comments
+import {Comment} from "./comment";
 
 const { Schema, model, models } = mongoose;
 
@@ -14,7 +14,7 @@ const PostSchema = new Schema(
         },
         text: { type: String, required: true },
         imageUrl: { type: String },
-        // comments: { type: [Schema.Types.ObjectId], ref: "Comment", default: [] },
+        comments: { type: [Schema.Types.ObjectId], ref: "Comment", default: [] },
         likes: { type: [String] },
     },
     {
@@ -49,27 +49,27 @@ PostSchema.methods.removePost = async function () {
     }
 };
 
-// PostSchema.methods.commentOnPost = async function (commentToAdd) {
-//     try {
-//         const comment = await Comment.create(commentToAdd);
-//         this.comments.push(comment._id);
-//         await this.save();
-//     } catch (error) {
-//         console.log("error when commenting on post", error);
-//     }
-// };
+PostSchema.methods.commentOnPost = async function (commentToAdd) {
+    try {
+        const comment = await Comment.create(commentToAdd);
+        this.comments.push(comment._id);
+        await this.save();
+    } catch (error) {
+        console.log("error when commenting on post", error);
+    }
+};
 
-// PostSchema.methods.getAllComments = async function () {
-//     try {
-//         await this.populate({
-//             path: "comments",
-//             options: { sort: { createdAt: -1 } },
-//         });
-//         return this.comments;
-//     } catch (error) {
-//         console.log("error when getting all comments", error);
-//     }
-// };
+PostSchema.methods.getAllComments = async function () {
+    try {
+        await this.populate({
+            path: "comments",
+            options: { sort: { createdAt: -1 } },
+        });
+        return this.comments;
+    } catch (error) {
+        console.log("error when getting all comments", error);
+    }
+};
 
 // Static Methods
 
@@ -77,19 +77,19 @@ PostSchema.statics.getAllPosts = async function () {
     try {
         const posts = await this.find()
         .sort({ createdAt: -1 })
-        // .populate({
-        //     path: "comments",
-        //     options: { sort: { createdAt: -1 } },
-        // })
+        .populate({
+            path: "comments",
+            options: { sort: { createdAt: -1 } },
+        })
         .lean();
 
         return posts.map((post) => ({
             ...post,
             _id: post._id.toString(),
-            // comments: post.comments?.map((comment) => ({
-            //     ...comment,
-            //     _id: comment._id.toString(),
-            // })) || [], // Return an empty array if comments is undefined
+            comments: post.comments?.map((comment) => ({
+                ...comment,
+                _id: comment._id.toString(),
+            })) || [], // Return an empty array if comments is undefined
         }));
 
     } catch (error) {

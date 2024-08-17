@@ -21,7 +21,7 @@ function Post({post}) {
 
 
     return (
-    <div className="bg-white rounded-xl border">
+    <div className="bg-white rounded-xl border mt-2">
         <div className="ml-0 p-4 flex space-x-2">
             <div>
                 {post?.user?.userImage ? (

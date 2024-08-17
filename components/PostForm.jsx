@@ -42,104 +42,105 @@ function PostForm() {
 
     return (
         
-        <div className="mb-2">
-            <form
-            ref={ref}
-            action={(formData) => {
-                // const promise = 
-                handlePostAction(formData);
-                // toast.promise(promise, {
-                //     loading: "Creating post...",
-                //     success: "Post created!",
-                //     error: (e) => "Error creating post: " + e.message,
-                // });
-            }}
-            className="p-1 bg-white"
-            >
-                <div className="ml-2 mr-1 flex items-center space-x-2">
-                    
-                    {session?.user?.profileImage ? (
-                        <Avatar
-                            isBordered
-                            color="primary"
-                            size="sm"
-                            radius="full"
-                            src={session?.user?.profileImage}
+        <div>
+            <div className="mb-2 bg-white rounded-xl border">
+                <form
+                ref={ref}
+                action={(formData) => {
+                    // const promise = 
+                    handlePostAction(formData);
+                    // toast.promise(promise, {
+                    //     loading: "Creating post...",
+                    //     success: "Post created!",
+                    //     error: (e) => "Error creating post: " + e.message,
+                    // });
+                }}
+                className="p-1 bg-transparent"
+                >
+                    <div className="ml-2 mr-1 mt-1 flex items-center space-x-2">
+                        
+                        {session?.user?.profileImage ? (
+                            <Avatar
+                                isBordered
+                                color="primary"
+                                size="sm"
+                                radius="full"
+                                src={session?.user?.profileImage}
+                            />
+                        ):(
+                            <Avatar
+                                isBordered
+                                color=""
+                                size="sm"
+                                radius="full"
+                                name={session?.user?.firstName.charAt(0) + session?.user?.lastName.charAt(0)}
+                            />
+                        )}
+
+                        <input
+                        ref={fileInputRef}
+                        type="text"
+                        name="postInput"
+                        placeholder="Start writing a post..."
+                        className="flex-1 outline-none rounded-xl px-4 bg-gray-200"
                         />
-                    ):(
-                        <Avatar
-                            isBordered
-                            color=""
-                            size="sm"
-                            radius="full"
-                            name={session?.user?.firstName.charAt(0) + session?.user?.lastName.charAt(0)}
+
+                        <input
+                        ref={fileInputRef}
+                        type="file"
+                        name="image"
+                        accept="image/*,video/*,audio/*"
+                        hidden
+                        onChange={handleImageChange}
                         />
-                    )}
 
-                    <input
-                    ref={fileInputRef}
-                    type="text"
-                    name="postInput"
-                    placeholder="Start writing a post..."
-                    className="flex-1 outline-none rounded-xl py-1.6 px-4 border bg-gray-200"
-                    />
-
-                    <input
-                    ref={fileInputRef}
-                    type="file"
-                    name="image"
-                    accept="image/*,video/*,audio/*"
-                    hidden
-                    onChange={handleImageChange}
-                    />
-
-                    <Button
-                        type="submit"
-                        color="primary"
-                        size="md"
-                        radius="sm"
-                        variant="flat"
-                    >
-                        Post
-                    </Button>
-
-                </div>
-                
-                {preview && (
-                    <div className="mt-3">
-                        <img src={preview} alt="Preview" className="w-full object-cover" />
-                    </div>
-                )}
-                
-                <div className="mr-1 flex gap-4 items-center justify-end mt-2 space-x-4">
-                    <Button
-                        color="default"
-                        size="sm"
-                        radius="sm"
-                        variant="ghost"
-                        className="text-sm"
-                        onClick={() => fileInputRef.current?.click()}
-                    >
-                        <ImageIcon className="mr-2" size={18} color="currentColor" />
-                        {preview? "Change" : "Import"} Media
-                    </Button>
-
-                    {preview && (
                         <Button
-                            color="danger"
+                            type="submit"
+                            color="primary"
+                            size="md"
+                            radius="sm"
+                            variant="flat"
+                        >
+                            Post
+                        </Button>
+
+                    </div>
+                    
+                    {preview && (
+                        <div className="mt-3">
+                            <img src={preview} alt="Preview" className="w-full object-cover" />
+                        </div>
+                    )}
+                    
+                    <div className="mr-1 mb-1 flex gap-4 items-center justify-end mt-2 space-x-4">
+                        <Button
+                            color="default"
                             size="sm"
                             radius="sm"
                             variant="ghost"
                             className="text-sm"
-                            onClick={() => setPreview(null)}
+                            onClick={() => fileInputRef.current?.click()}
                         >
-                            <XIcon className="mr-2" size={16} color="currentColor" />
-                            Remove image
+                            <ImageIcon className="mr-2" size={18} color="currentColor" />
+                            {preview? "Change" : "Import"} Media
                         </Button>
-                    )}
-                </div>
-            </form>
 
+                        {preview && (
+                            <Button
+                                color="danger"
+                                size="sm"
+                                radius="sm"
+                                variant="ghost"
+                                className="text-sm"
+                                onClick={() => setPreview(null)}
+                            >
+                                <XIcon className="mr-2" size={16} color="currentColor" />
+                                Remove image
+                            </Button>
+                        )}
+                    </div>
+                </form>
+            </div>
             <hr className="mt-2 border-gray-300"/>
         </div>
     )
