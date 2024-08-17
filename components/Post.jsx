@@ -9,7 +9,7 @@ import ReactTimeago from "react-timeago";
 // import {Image} from "@nextui-org/image";
 import Image from "next/image"
 import deletePostAction from "@/actions/deletePostAction";
-// import PostOptions from "./PostOptions";
+import PostOptions from "./PostOptions";
 // import { toast } from "sonner";
 
 function Post({post}) {
@@ -102,10 +102,11 @@ function Post({post}) {
             )}
         </div>
 
-        {/* <PostOptions 
-            postId={post._id}
+        <PostOptions 
+            postId={post._id.toString()}
             post={post}
-        /> */}
+        />
+        
     </div>
     );
 }

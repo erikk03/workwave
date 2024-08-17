@@ -15,7 +15,7 @@ const PostSchema = new Schema(
         text: { type: String, required: true },
         imageUrl: { type: String },
         // comments: { type: [Schema.Types.ObjectId], ref: "Comment", default: [] },
-        // likes: { type: [String] },
+        likes: { type: [String] },
     },
     {
         timestamps: true,
@@ -49,27 +49,27 @@ PostSchema.methods.removePost = async function () {
     }
 };
 
-PostSchema.methods.commentOnPost = async function (commentToAdd) {
-    try {
-        const comment = await Comment.create(commentToAdd);
-        this.comments.push(comment._id);
-        await this.save();
-    } catch (error) {
-        console.log("error when commenting on post", error);
-    }
-};
+// PostSchema.methods.commentOnPost = async function (commentToAdd) {
+//     try {
+//         const comment = await Comment.create(commentToAdd);
+//         this.comments.push(comment._id);
+//         await this.save();
+//     } catch (error) {
+//         console.log("error when commenting on post", error);
+//     }
+// };
 
-PostSchema.methods.getAllComments = async function () {
-    try {
-        await this.populate({
-            path: "comments",
-            options: { sort: { createdAt: -1 } },
-        });
-        return this.comments;
-    } catch (error) {
-        console.log("error when getting all comments", error);
-    }
-};
+// PostSchema.methods.getAllComments = async function () {
+//     try {
+//         await this.populate({
+//             path: "comments",
+//             options: { sort: { createdAt: -1 } },
+//         });
+//         return this.comments;
+//     } catch (error) {
+//         console.log("error when getting all comments", error);
+//     }
+// };
 
 // Static Methods
 
