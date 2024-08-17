@@ -88,7 +88,7 @@ function PostForm() {
                     ref={fileInputRef}
                     type="file"
                     name="image"
-                    accept="image/*"
+                    accept="image/*,video/*,audio/*"
                     hidden
                     onChange={handleImageChange}
                     />
