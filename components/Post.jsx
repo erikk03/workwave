@@ -42,7 +42,7 @@ function Post({post}) {
             </div>
 
             <div className="flex justify-between flex-1">
-                <div className="">
+                <div className=" ">
                     <p className="font-semibold">
                         {post.user.firstName} {post.user.lastName}{""}
                     </p>
