@@ -22,7 +22,7 @@ function Post({post}) {
 
     return (
     <div className="bg-white rounded-xl border">
-        <div className="p-4 flex space-x-2">
+        <div className="ml-0 p-4 flex space-x-2">
             <div>
                 {post?.user?.userImage ? (
                     <Avatar
@@ -42,7 +42,7 @@ function Post({post}) {
             </div>
 
             <div className="flex justify-between flex-1">
-                <div className=" ">
+                <div className=" mt-2">
                     <p className="font-semibold">
                         {post.user.firstName} {post.user.lastName}{""}
                     </p>

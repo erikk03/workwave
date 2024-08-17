@@ -56,14 +56,14 @@ function PostForm() {
             }}
             className="p-1 bg-white"
             >
-                <div className="flex items-center space-x-2">
+                <div className="ml-2 mr-1 flex items-center space-x-2">
                     
                     {session?.user?.profileImage ? (
                         <Avatar
                             isBordered
                             color="primary"
                             size="sm"
-                            radius="md"
+                            radius="full"
                             src={session?.user?.profileImage}
                         />
                     ):(
@@ -71,7 +71,7 @@ function PostForm() {
                             isBordered
                             color=""
                             size="sm"
-                            radius="md"
+                            radius="full"
                             name={session?.user?.firstName.charAt(0) + session?.user?.lastName.charAt(0)}
                         />
                     )}
@@ -111,7 +111,7 @@ function PostForm() {
                     </div>
                 )}
                 
-                <div className="flex gap-4 items-center justify-end mt-2 space-x-4">
+                <div className="mr-1 flex gap-4 items-center justify-end mt-2 space-x-4">
                     <Button
                         color="default"
                         size="sm"
