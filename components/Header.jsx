@@ -51,7 +51,7 @@ export default function Header() {
                     <HomeIcon className="h-5" />
                 </Link>
 
-                <Link href="" className="icon hidden md:flex">
+                <Link href="/network" className="icon hidden md:flex">
                     <UsersIcon className="h-5" />
                 </Link>
 
