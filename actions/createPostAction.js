@@ -14,9 +14,9 @@ export default async function createPostAction(formData, session) {
     }
 
     const postInput = formData.get("postInput")?.toString();
-    const image = formData.get("image");
+    const media = formData.get("media");    // can be image, video or audio
 
-    let image_url = undefined;
+    let media_url = undefined;
 
     if (!postInput) {
         throw new Error("Post input is required");
@@ -31,15 +31,17 @@ export default async function createPostAction(formData, session) {
     };
 
     try {
-        if (image && image.size > 0) {
+        if (media && media.size > 0) {
             
             // Get the Azure Storage account name, SAS token, and container name from environment variables
             const accountName = process.env.ACCOUNT_NAME;
             const containerName = process.env.CONTAINER_NAME_2;
 
-            // Generate a unique file name for the image using a random UUID and timestamp
+            // Generate a unique file name for the media file using a random UUID and timestamp
             const timestamp = new Date().getTime();
-            const file_name = `${randomUUID()}_${timestamp}.png`;
+            const fileExtension = media.type.split('/')[1]; // Extract the file extension
+            
+            const file_name = `${randomUUID()}_${timestamp}.${fileExtension}`;
 
             const sasToken = generateSasToken(containerName, file_name);
 
@@ -55,19 +57,20 @@ export default async function createPostAction(formData, session) {
             const blockBlobClient = containerClient.getBlockBlobClient(file_name);
             
             // Convert the image file to an ArrayBuffer
-            const imageBuffer = await image.arrayBuffer();
+            const mediaBuffer = await media.arrayBuffer();
 
             // Upload the image data to the block blob
-            await blockBlobClient.uploadData(imageBuffer);
+            await blockBlobClient.uploadData(mediaBuffer);
 
             // Get the URL of the uploaded image
-            image_url = blockBlobClient.url;
+            media_url = blockBlobClient.url;
             
             // Create a new post with the user information, post input, and image URL
             const body = {
                 user: userDB,
                 text: postInput,
-                imageUrl: image_url,
+                mediaUrl: media_url,
+                mediaType: media.type,
             };
             
             await Post.create(body);

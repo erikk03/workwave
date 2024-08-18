@@ -13,12 +13,13 @@ export async function POST(request) {
 
     try {
         await connectDB();
-        const { user, text, imageUrl } = await request.json();
+        const { user, text, mediaUrl, mediaType } = await request.json();
 
         const postData = {
             user,
             text,
-            ...(imageUrl && { imageUrl }),
+            ...(mediaUrl && { mediaUrl }),
+            ...(mediaType && {mediaType}),
         };
 
         const post = await Post.create(postData);

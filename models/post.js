@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-// import Comment from "./comment"; // Uncomment if you need to use comments
+import {Comment} from "./comment";
 
 const { Schema, model, models } = mongoose;
 
@@ -13,9 +13,10 @@ const PostSchema = new Schema(
             userImage: { type: String },
         },
         text: { type: String, required: true },
-        imageUrl: { type: String },
-        // comments: { type: [Schema.Types.ObjectId], ref: "Comment", default: [] },
-        // likes: { type: [String] },
+        mediaUrl: { type: String },
+        mediaType: { type: String },
+        comments: { type: [Schema.Types.ObjectId], ref: "Comment", default: [] },
+        likes: { type: [String] },
     },
     {
         timestamps: true,
@@ -77,19 +78,19 @@ PostSchema.statics.getAllPosts = async function () {
     try {
         const posts = await this.find()
         .sort({ createdAt: -1 })
-        // .populate({
-        //     path: "comments",
-        //     options: { sort: { createdAt: -1 } },
-        // })
+        .populate({
+            path: "comments",
+            options: { sort: { createdAt: -1 } },
+        })
         .lean();
 
         return posts.map((post) => ({
             ...post,
             _id: post._id.toString(),
-            // comments: post.comments?.map((comment) => ({
-            //     ...comment,
-            //     _id: comment._id.toString(),
-            // })) || [], // Return an empty array if comments is undefined
+            comments: post.comments?.map((comment) => ({
+                ...comment,
+                _id: comment._id.toString(),
+            })) || [], // Return an empty array if comments is undefined
         }));
 
     } catch (error) {
