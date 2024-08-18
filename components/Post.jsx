@@ -89,16 +89,30 @@ function Post({post}) {
         <div>
             <p className="px-4 pb-2 mt-2">{post.text}</p>
 
-            {/* if image uploaded show it here... */}
-            {post.imageUrl && (
-                <Image
-                    layout="responsive"
-                    style={{ objectFit: 'cover' }}
-                    width={500}
-                    height={500}
-                    src={post.imageUrl}
-                    alt="Post image"
-                />
+            {/* if media uploaded show it here... */}
+            {post.mediaUrl && (
+                <div>
+                    {post.mediaType?.startsWith('image/') ? (
+                        <Image
+                            layout="responsive"
+                            style={{ objectFit: 'cover' }}
+                            width={500}
+                            height={500}
+                            src={post.mediaUrl}
+                            alt="Post image"
+                        />
+                    ) : post.mediaType?.startsWith('video/') ? (
+                        <video controls className="w-full">
+                            <source src={post.mediaUrl} type={post.mediaType} />
+                            Your browser does not support the video tag.
+                        </video>
+                    ) : post.mediaType?.startsWith('audio/') ? (
+                        <audio controls className="w-full">
+                            <source src={post.mediaUrl} type={post.mediaType} />
+                            Your browser does not support the audio element.
+                        </audio>
+                    ) : null}
+                </div>
             )}
         </div>
 

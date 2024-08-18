@@ -8,14 +8,17 @@ import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import createPostAction from "@/actions/createPostAction";
 // import { toast } from "sonner";
+import { compressImage, compressVideo } from "@/lib/compress";
 
 function PostForm() {
     const ref = useRef(null);
     const fileInputRef = useRef(null);
     const { data: session, status } = useSession();
     const [preview, setPreview] = useState(null);
+    const [mediaType, setMediaType] = useState(null);
 
     const handlePostAction = async (formData) => {
+        console.log("handlepostaction just in");
         const formDataCopy = formData;
         ref.current?.reset();
         const text = formDataCopy.get("postInput")?.toString();
@@ -25,19 +28,55 @@ function PostForm() {
         }
 
         setPreview(null);
+        setMediaType(null);
     
         try {
+            console.log("started createpostaction");
             await createPostAction(formDataCopy, session);
+            console.log("createpostaction finished");
         } catch (error) {
-            console.log('Error creating post: ', error);
+            console.log('Error creating post: ', error.message);
         }
     }
 
-    const handleImageChange = (event) => {
+    const handleImageChange = async (event) => {
         const file = event.target.files?.[0];
-        if (file) {
-            setPreview(URL.createObjectURL(file));
+        if(!file) return;
+
+        let compressedFile;
+
+        if (file.type.startsWith('image/')) {
+            compressedFile = await compressImage(file);
+
+        }else if (file.type.startsWith('video/')){
+            compressedFile = await compressVideo(file);
+        }else{
+            compressedFile = file;
         }
+
+        setPreview(URL.createObjectURL(file));
+        setMediaType(file.type);
+    }
+
+    const renderPreview = () => {
+        if (mediaType?.startsWith('image/')) {
+            return <img src={preview} alt="Preview" className="w-full object-cover" />;
+        } else if (mediaType?.startsWith('video/')) {
+            return (
+                <video controls className="w-full">
+                    <source src={preview} type={mediaType} />
+                    Your browser does not support the video tag.
+                </video>
+            );
+        } else if (mediaType?.startsWith('audio/')) {
+            return (
+                <audio controls className="w-full">
+                    <source src={preview} type={mediaType} />
+                    Your browser does not support the audio element.
+                </audio>
+            );
+        }
+        return null;
     }
 
     return (
@@ -88,7 +127,7 @@ function PostForm() {
                         <input
                         ref={fileInputRef}
                         type="file"
-                        name="image"
+                        name="media"
                         accept="image/*,video/*,audio/*"
                         hidden
                         onChange={handleImageChange}
@@ -108,7 +147,8 @@ function PostForm() {
                     
                     {preview && (
                         <div className="mt-3">
-                            <img src={preview} alt="Preview" className="w-full object-cover" />
+                            {/* <img src={preview} alt="Preview" className="w-full object-cover" /> */}
+                            {renderPreview()}
                         </div>
                     )}
                     
@@ -132,10 +172,13 @@ function PostForm() {
                                 radius="sm"
                                 variant="ghost"
                                 className="text-sm"
-                                onClick={() => setPreview(null)}
+                                onClick={() => {
+                                    setPreview(null);
+                                    setMediaType(null);
+                                }}
                             >
                                 <XIcon className="mr-2" size={16} color="currentColor" />
-                                Remove image
+                                Remove Media
                             </Button>
                         )}
                     </div>
