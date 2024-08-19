@@ -13,4 +13,12 @@ body {
   box-sizing: border-box;
 }
 
-  
+/* Hide scrollbar for all elements */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+*::-webkit-scrollbar { /* WebKit browsers */
+  display: none;
+}
