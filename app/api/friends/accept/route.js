@@ -14,6 +14,8 @@ export async function POST(req) {
         await connectMongoDB();
 
         const { requesterId } = await req.json();
+        
+        console.log(":::", requesterId);
 
         if (!requesterId) {
             return new Response("Requester ID is required", { status: 400 });
@@ -32,7 +34,7 @@ export async function POST(req) {
 
         // Add each other as friends
         user.friends.push(requesterId);
-        requester.friends.push(user.userId);
+        requester.friends.push(user._id);
 
         // Remove the requester from the pendingRequests list
         user.pendingRequests = user.pendingRequests.filter(id => id.toString() !== requesterId);

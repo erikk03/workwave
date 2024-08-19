@@ -8,7 +8,6 @@ import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import createPostAction from "@/actions/createPostAction";
 // import { toast } from "sonner";
-import { compressImage, compressVideo } from "@/lib/compress";
 
 function PostForm() {
     const ref = useRef(null);
@@ -18,7 +17,6 @@ function PostForm() {
     const [mediaType, setMediaType] = useState(null);
 
     const handlePostAction = async (formData) => {
-        console.log("handlepostaction just in");
         const formDataCopy = formData;
         ref.current?.reset();
         const text = formDataCopy.get("postInput")?.toString();
@@ -31,9 +29,7 @@ function PostForm() {
         setMediaType(null);
     
         try {
-            console.log("started createpostaction");
             await createPostAction(formDataCopy, session);
-            console.log("createpostaction finished");
         } catch (error) {
             console.log('Error creating post: ', error.message);
         }
@@ -42,17 +38,6 @@ function PostForm() {
     const handleImageChange = async (event) => {
         const file = event.target.files?.[0];
         if(!file) return;
-
-        let compressedFile;
-
-        if (file.type.startsWith('image/')) {
-            compressedFile = await compressImage(file);
-
-        }else if (file.type.startsWith('video/')){
-            compressedFile = await compressVideo(file);
-        }else{
-            compressedFile = file;
-        }
 
         setPreview(URL.createObjectURL(file));
         setMediaType(file.type);
