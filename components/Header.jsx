@@ -1,6 +1,6 @@
 "use client";
 
-import { Briefcase, HomeIcon, MessageSquare, SearchIcon, UsersIcon } from "lucide-react";
+import { Briefcase, HomeIcon, MessageSquare, SearchIcon, UsersIcon, BellRing, UserCog, CircleUser } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
@@ -70,6 +70,9 @@ export default function Header() {
                 <Link href="/communication" title="Communication">
                     <MessageSquare className={cn("h-5", path === '/communication' && "text-black fill-blue-500")} />
                 </Link>
+                <Link href="/notifications" title="Notifications">
+                    <BellRing className={cn("h-5", path === '/notifications' && "text-black fill-blue-500")} />
+                </Link>
             </div>
 
             <div className="flex relative">
@@ -96,11 +99,19 @@ export default function Header() {
 
                 {dropdownVisible && (
                     <div className="absolute right-2 mt-7 w-40 bg-white border border-gray-300 rounded shadow-xl">
-                        <Link href="/userinfo" legacyBehavior>
-                            <a className="block px-4 py-2 text-gray-800 hover:bg-gray-300">Profile Information</a>
+                        <Link href={`/userinfo/${session.user.userId}`} legacyBehavior>
+                            <a 
+                                className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-300">
+                                <CircleUser className="mr-2"/>
+                                My Profile
+                            </a>
                         </Link>
                         <Link href=""legacyBehavior>
-                            <a className="block px-4 py-2 text-gray-800 hover:bg-gray-300">Profile Settings</a>
+                            <a
+                                className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-300">
+                                <UserCog className="mr-2"/>
+                                Account Settings
+                            </a>
                         </Link>
                         <a className="flex px-4 py-2 justify-center">
                             <Button
