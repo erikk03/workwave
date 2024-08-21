@@ -8,6 +8,12 @@ const userSchema = new Schema({
     phone: { type: String, required: true },
     password: { type: String, required: true },
     profileImage: { type: String, default: null },
+    position: {type: String, default: ''},
+    industry: { type: String, default: ''},
+    experience: { type: String, default: ''},
+    education: { type: String, default: ''},
+    skills: { type: String, default: ''},
+    cv: { type: String, default: null }, // Field for storing the CV file path or URL
     isAdmin: { type: Boolean, default: false },
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     pendingRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]

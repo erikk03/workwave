@@ -1,62 +1,139 @@
 "use client";
 
-import { signOut } from "next-auth/react";
+import { useState } from 'react';
+import { Avatar, Button } from '@nextui-org/react';
+import { redirect } from 'next/navigation';
 import { useSession } from "next-auth/react";
-import { Avatar } from "@nextui-org/avatar";
-import { Button } from "@nextui-org/react";
 
-export default function UserInfo() {
-  const { data: session, status } = useSession();
+export default function UserProfile({ userId, initialUser }) {
+	const [profileUser, setUser] = useState(initialUser);
+	const [isEditing, setIsEditing] = useState(false);
+	const { data: session, status } = useSession();
 
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
+	const handleEditClick = () => setIsEditing(true);
 
-  if (status === "unauthenticated") {
-    return <div>Please log in to view your profile.</div>;
-  }
+	const sessionUser = session?.user;
+	const sessionUserId = sessionUser?.userId;
 
-  return (
-    <div className="grid place-items-center h-screen">
-      <div className="shadow-2xl p-5 rounded-lg border-t-4 border-blue-900 bg-zinc-300/10 flex flex-col gap-3 my-6">
-        {session?.user?.profileImage ? (
-          <Avatar
-              isBordered
-              color="primary"
-              size="lg"
-              radius="full"
-              className="w-24 h-24 mx-auto mb-4"
-              src={session?.user?.profileImage}
-          />
-        ):(
-          <Avatar
-              isBordered
-              color=""
-              size="lg"
-              radius="full"
-              className="w-24 h-24 mx-auto mb-4"
-              name={session?.user?.firstName.charAt(0) + session?.user?.lastName.charAt(0)}
-          />
-          )}
+  	return (
+    <div className="col-span-full md:col-span-6 md:max-w-2xl xl:col-span-4 xl:max-w-5xl sm:max-w-md mx-auto w-full">
+      	<div className="mt-5 bg-white rounded-xl border">
+		  	<div className='mt-2 mr-2 flex flex-col items-end'>
+				{(userId === sessionUserId) && (
+					<Button onClick={handleEditClick} color="default" variant="light" size="sm">
+					Edit Profile
+					</Button>
+				)}
+          	</div>
 
-        <div>
-          Name: <span className="font-bold">{session?.user?.firstName + " " + session?.user?.lastName}</span>
-        </div>
-        <div>
-          Email: <span className="font-bold">{session?.user?.email}</span>
-        </div>
+			<div className='mt-5 flex flex-col items-center'>
+				{profileUser.profileImage ? (
+					<Avatar
+					isBordered
+					color="primary"
+					size="lg"
+					radius="full"
+					className="w-24 h-24 mx-auto mb-4"
+					src={profileUser.profileImage}
+					/>
+				) : (
+					<Avatar
+					isBordered
+					color=""
+					size="lg"
+					radius="full"
+					className="w-24 h-24 mx-auto mb-4"
+					name={profileUser.firstName.charAt(0) + profileUser.lastName.charAt(0)}
+					/>
+				)}
+				<div>
+					<span className="font-bold text-3xl">
+						{profileUser.firstName} {profileUser.lastName}
+					</span>
+				</div>
+				<div>
+					<span className=" text-lg">
+						{profileUser.email}
+					</span>
+				</div>
+			</div>
 
-        <Button
-          onClick={() => signOut()}
-          color="danger"
-          size="sm"
-          radius="sm"
-          variant="ghost"
-          className="w-fit text-sm mx-auto"
-        >
-          Log Out
-        </Button>
-      </div>
+			<div className='mb-2 mr-2 flex flex-col items-end'>
+				<Button color="default" variant="light" size="sm">
+					Download CV
+				</Button>
+			</div>
+
+			{isEditing && (
+				redirect(`/userinfo/${userId}/edit`)
+			)}
+
+		</div>
+
+		{/* Position and Industry */}
+		<div className="mt-5 pb-10 bg-white rounded-xl border">
+			<div className='mt-5 flex flex-col items-center'>
+				<div>
+					<span className="font-bold text-3xl">
+						Current Position and Industry
+					</span>
+				</div>
+				<div>
+					<span className="text-lg">
+						{profileUser.position || 'N/A'} in {profileUser.industry || 'N/A'}
+					</span>
+				</div>
+			</div>
+		</div>
+
+		{/* Experience */}
+		<div className="mt-5 pb-10 bg-white rounded-xl border">
+			<div className='mt-5 flex flex-col items-center'>
+				<div>
+					<span className="font-bold text-3xl">
+						Professional Experience
+					</span>
+				</div>
+				<div>
+					<span className="text-lg">
+						{profileUser.experience || 'N/A'}
+					</span>
+				</div>
+			</div>
+		</div>
+
+		{/* Education */}
+		<div className="mt-5 pb-10 bg-white rounded-xl border">
+			<div className='mt-5 flex flex-col items-center'>
+				<div>
+					<span className="font-bold text-3xl">
+						Education
+					</span>
+				</div>
+				<div>
+					<span className="text-lg">
+						{profileUser.education || 'N/A'}
+					</span>
+				</div>
+			</div>
+		</div>
+
+		{/* Skills */}
+		<div className="mt-5 mb-5 space-y-1 pb-10 bg-white rounded-xl border">
+			<div className='mt-5 flex flex-col items-center'>
+				<div>
+					<span className="font-bold text-3xl">
+						Skills
+					</span>
+				</div>
+				<div>
+					<span className="text-lg">
+						{profileUser.skills || 'N/A'}
+					</span>
+				</div>
+			</div>
+		</div>
     </div>
   );
 }
+

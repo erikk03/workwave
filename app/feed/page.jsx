@@ -22,11 +22,11 @@ export default async function Feed() {
   return (
     <div className="min-h-screen flex flex-col">
 
-      <header className="border-b sticky top-0 bg-white z-50">
+      <header className="border-b sticky top-0 bg-white z-50 ">
         <Header />
       </header>
 
-      <div className="grid grid-cols-8 mt-5 sm:px-5">
+      <div className="grid grid-cols-8 mt-5 sm:px-5 flex-grow">
         <section className="hidden md:inline md:col-span-2">
           {/* <UserInformation posts={posts}/> */}
         </section>

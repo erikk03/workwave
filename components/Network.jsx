@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Header from "@/components/Header";
 import { useRouter } from 'next/navigation'; // Import useRouter
 
 export default function Network() {
@@ -56,24 +55,23 @@ export default function Network() {
                         </button> */}
                     </div>
 
-                    {loading ? (
-                        <div className="text-center">Loading...</div>
-                    ) : error ? (
-                        <div className="text-center text-red-500">Error: {error}</div>
-                    ) : friends.length > 0 ? (
-                        friends.map(friend => (
-                            <div key={friend._id} className="flex items-center mb-4">
-                                <img src={friend.profileImage || '/default-avatar.png'} alt="Profile" className="w-12 h-12 rounded-full" />
-                                <div className="ml-4">
-                                    <h2 className="text-lg font-medium">{friend.firstName} {friend.lastName}</h2>
-                                </div>
+                {loading ? (
+                    <div className="text-center">Loading...</div>
+                ) : error ? (
+                    <div className="text-center text-red-500">Error: {error}</div>
+                ) : friends.length > 0 ? (
+                    friends.map(friend => (
+                        <div key={friend._id} className="flex items-center mb-4">
+                            <img src={friend.profileImage || '/default-avatar.png'} alt="Profile" className="w-12 h-12 rounded-full" />
+                            <div className="ml-4">
+                                <h2 className="text-lg font-medium">{friend.firstName} {friend.lastName}</h2>
                             </div>
-                        ))
-                    ) : (
-                        <p>You have no friends yet.</p>
-                    )}
-                </section>
-            </div>
+                        </div>
+                    ))
+                ) : (
+                    <p>You have no friends yet.</p>
+                )}
+            </section>
         </div>
     );
 }

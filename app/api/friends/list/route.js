@@ -7,17 +7,11 @@ export async function GET() {
     try {
         const session = await getServerSession(authOptions);
 
-        // Debugging output
-        console.log("Session:", session);
-
         if (!session || !session.user?.userId) return new Response("Unauthorized or User ID is missing", { status: 401 });
 
         await connectMongoDB();
 
         const user = await User.findById(session.user.userId).populate('friends', 'firstName lastName profileImage');
-
-        // Debugging output
-        console.log("User:", user);
 
         if (!user) return new Response("User not found", { status: 404 });
 
