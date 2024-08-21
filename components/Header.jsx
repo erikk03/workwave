@@ -59,7 +59,7 @@ export default function Header() {
                     <Briefcase className="h-5" />
                 </Link>
 
-                <Link href="" className="icon hidden md:flex">
+                <Link href="/receivefriendrequest" className="icon hidden md:flex">
                     <MessageSquare className="h-5" />
                 </Link>
 

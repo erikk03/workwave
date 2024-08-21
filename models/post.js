@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import {Comment} from "./comment";
+import {Notification} from "./notification";
 
 const { Schema, model, models } = mongoose;
 
@@ -17,6 +18,7 @@ const PostSchema = new Schema(
         mediaType: { type: String },
         comments: { type: [Schema.Types.ObjectId], ref: "Comment", default: [] },
         likes: { type: [String] },
+        notifications: { type: [Schema.Types.ObjectId], ref: "Notification", default: [] },
     },
     {
         timestamps: true,
@@ -50,6 +52,7 @@ PostSchema.methods.removePost = async function () {
     }
 };
 
+
 PostSchema.methods.commentOnPost = async function (commentToAdd) {
     try {
         const comment = await Comment.create(commentToAdd);
@@ -59,6 +62,36 @@ PostSchema.methods.commentOnPost = async function (commentToAdd) {
         console.log("error when commenting on post", error);
     }
 };
+
+PostSchema.methods.addCommentNotification = async function (notificationToAdd) {
+    try {
+        const notification = await Notification.create(notificationToAdd);
+        console.log("notification", notification);
+    
+        // Push the notification's ObjectId into the post's notifications array
+        this.notifications.push(notification._id);
+    
+        await this.save();  
+        
+    } catch (error) {
+        console.log("error when sending comment notification", error);
+    }
+}
+
+PostSchema.methods.addLikeNotification = async function (notificationToAdd) {
+    try {
+        const notification = await Notification.create(notificationToAdd);
+        console.log("notification", notification);
+    
+        // Push the notification's ObjectId into the post's notifications array
+        this.notifications.push(notification._id);
+    
+        await this.save();  
+        
+    } catch (error) {
+        console.log("error when sending like notification", error);
+    }
+}
 
 PostSchema.methods.getAllComments = async function () {
     try {

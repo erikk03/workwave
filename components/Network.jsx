@@ -48,12 +48,12 @@ export default function Network() {
                         >
                             Send Friend Request
                         </button>
-                        <button
+                        {/* <button
                             onClick={() => router.push('/receivefriendrequest')}
                             className="btn btn-primary"
                         >
                             View Friend Requests
-                        </button>
+                        </button> */}
                     </div>
 
                     {loading ? (
