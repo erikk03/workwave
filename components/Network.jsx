@@ -31,29 +31,24 @@ export default function Network() {
     }, []);
 
     return (
-        <div className="min-h-screen flex flex-col">
-            <header className="border-b sticky top-0 bg-white z-50">
-                <Header />
-            </header>
-
-            <div className="grid grid-cols-8 mt-5 sm:px-5">
-                <section className="col-span-full md:col-span-6 xl:col-span-4 xl:max-w-xl mx-auto w-full">
-                    <h1 className="text-2xl font-semibold mb-4">Your Network</h1>
-                    
-                    <div className="flex justify-between mb-4">
-                        <button
-                            onClick={() => router.push('/friendrequest')}
-                            className="btn btn-primary"
-                        >
-                            Send Friend Request
-                        </button>
-                        {/* <button
-                            onClick={() => router.push('/receivefriendrequest')}
-                            className="btn btn-primary"
-                        >
-                            View Friend Requests
-                        </button> */}
-                    </div>
+        <div className="grid grid-cols-8 mt-5 sm:px-5">
+            <section className="col-span-full md:col-span-6 xl:col-span-4 xl:max-w-xl mx-auto w-full">
+                <h1 className="text-2xl font-semibold mb-4">Your Network</h1>
+                
+                <div className="flex justify-between mb-4">
+                    <button
+                        onClick={() => router.push('/friendrequest')}
+                        className="btn btn-primary"
+                    >
+                        Send Friend Request
+                    </button>
+                    <button
+                        onClick={() => router.push('/receivefriendrequest')}
+                        className="btn btn-primary"
+                    >
+                        View Friend Requests
+                    </button>
+                </div>
 
                 {loading ? (
                     <div className="text-center">Loading...</div>
