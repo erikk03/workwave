@@ -7,6 +7,8 @@ import { revalidatePath } from "next/cache";
 import { generateSasToken } from "@/lib/azureblob";
 
 export default async function createPostAction(formData, session) {
+    console.log("postdata_post:", formData);
+    
     const user = session?.user;
 
     if (!user) {

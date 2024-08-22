@@ -1,156 +1,186 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button, Input, Textarea } from '@nextui-org/react';
 import { redirect } from 'next/navigation';
+import { useSession } from "next-auth/react";
+import updateUserInfo from "@/actions/updateUserInfo";
 
 export default function UserProfile({ userId, initialUser }) {
-  const [user, setUser] = useState(initialUser);
-  const [isEditing, setIsEditing] = useState(true);
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-	phone: '',
-    position: '',
-    industry: '',
-    experience: '',
-    education: '',
-    skills: '',
-  });
+	const { data: session, status } = useSession();
 
-  useEffect(() => {
-    setFormData({
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-	  phone: user.phone,
-      position: user.position,
-      industry: user.industry,
-      experience: user.experience,
-      education: user.education,
-      skills: user.skills,
-    });
-  }, [user]);
+	  const [user, setUser] = useState(initialUser);
+	  const [isEditing, setIsEditing] = useState(true);
+	  const [formData, setFormData] = useState({
+	    firstName: '',
+	    lastName: '',
+	    email: '',
+		phone: '',
+	    position: '',
+	    industry: '',
+	    experience: '',
+	    education: '',
+	    skills: '',
+		cv: null,
+	  });
 
-  const [cvFile, setCvFile] = useState(null);
+	  useEffect(() => {
+	    setFormData({
+	      firstName: user.firstName,
+	      lastName: user.lastName,
+	      email: user.email,
+		  phone: user.phone,
+	      position: user.position,
+	      industry: user.industry,
+	      experience: user.experience,
+	      education: user.education,
+	      skills: user.skills,
+		  cv: user.cv,
+	    });
+	  }, [user]);
 
-  const handleCancelClick = () => setIsEditing(false);
+	  const handleCancelClick = () => setIsEditing(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({ ...prevState, [name]: value }));
-  };
+	  const handleChange = (e) => {
+		const { name, value, files } = e.target;
+		if (name === 'cv') {
+		  setFormData((prevState) => ({ ...prevState, [name]: files[0] }));
+		} else {
+		  setFormData((prevState) => ({ ...prevState, [name]: value }));
+		}
+	  };
 
-  const handleCvChange = (e) => {
-    setCvFile(e.target.files[0]);
-  };
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		const formDataToSend = new FormData();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-	const response = await fetch(`/api/users/${userId}`, {
-		method: 'PUT',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({ ...formData, cv: cvFile }),
-    });
+		for (const [key, value] of Object.entries(formData)) {
+			if (key === 'cv' && value instanceof File) {
+				formDataToSend.append(key, value, value.name);
+				console.log('CV file:', value.name, value.type, value.size);
+			} else {
+				formDataToSend.append(key, value);
+			}
+		}
 
-	if (response.ok) {
-		const updatedUser = await response.json();
-		setUser(updatedUser); // Update local state with new data
-		setIsEditing(false);
-	} else {
-		// Handle error response
-		console.error('Failed to update user');
+		try {
+			const response = await updateUserInfo(formDataToSend, session);
+			const updatedUser = await response.json();
+			setUser(updatedUser);
+			setIsEditing(false);
+		} catch (error) {
+			console.log('Error updating user: ', error.message);
+		}
+	};
+
+
+	if(!isEditing){
+		redirect(`/userinfo/${userId}`);
 	}
-  };
 
-  if(!isEditing){
-    redirect(`/userinfo/${userId}`);
-  }
+	return (
+		<div className="col-span-full md:col-span-6 md:max-w-2xl xl:col-span-4 xl:max-w-5xl sm:max-w-md mx-auto w-full">
+			<div className="mt-5 bg-white rounded-xl border border-black">
+				<form
+				onSubmit={handleSubmit}
+				className="mb-2 rounded-xl space-y-4 bg-transparent"
+				>
+					<Input
+					label="First Name"
+					type="text"
+					name="firstName"
+					value={formData.firstName}
+					onChange={handleChange}
+					isRequired
+					/>
+					<Input
+					label="Last Name"
+					type="text"
+					name="lastName"
+					value={formData.lastName}
+					onChange={handleChange}
+					isRequired
+					/>
+					<Input
+					label="Email"
+					type="text"
+					name="email"
+					value={formData.email}
+					onChange={handleChange}
+					isRequired
+					/>
 
-  return (
-    <div className="col-span-full md:col-span-6 md:max-w-2xl xl:col-span-4 xl:max-w-5xl sm:max-w-md mx-auto w-full">
-      	<div className="mt-5 bg-white rounded-xl border">
-			<form onSubmit={handleSubmit} className="mb-2 bg-gray-200 rounded-xl space-y-4">
-				<Input
-				label="First Name"
-				name="firstName"
-				value={formData.firstName}
-				onChange={handleChange}
-				required
-				/>
-				<Input
-				label="Last Name"
-				name="lastName"
-				value={formData.lastName}
-				onChange={handleChange}
-				required
-				/>
-				<Input
-				label="Email"
-				name="email"
-				value={formData.email}
-				onChange={handleChange}
-				required
-				/>
-				<Input
-				label="Phone"
-				name="phone"
-				value={formData.phone}
-				onChange={handleChange}
-				/>
-				<Input
-				label="Position"
-				name="position"
-				value={formData.position}
-				onChange={handleChange}
-				/>
-				<Input
-				label="Industry"
-				name="industry"
-				value={formData.industry}
-				onChange={handleChange}
-				/>
-				<Textarea
-				label="Experience"
-				name="experience"
-				value={formData.experience}
-				onChange={handleChange}
-				/>
-				<Textarea
-				label="Education"
-				name="education"
-				value={formData.education}
-				onChange={handleChange}
-				/>
-				<Textarea
-				label="Skills"
-				name="skills"
-				value={formData.skills}
-				onChange={handleChange}
-				/>
+					<Input
+					label="Phone"
+					type="text"
+					name="phone"
+					value={formData.phone}
+					onChange={handleChange}
+					isRequired
+					/>
 
-				<Input
-				label="Upload CV"
-				type="file"
-				name="cv"
-				accept=".pdf"
-				onChange={handleCvChange}
-				/>
+					<Input
+					label="Position"
+					type="text"
+					name="position"
+					value={formData.position}
+					onChange={handleChange}
+					/>
+					<Input
+					label="Industry"
+					type="text"
+					name="industry"
+					value={formData.industry}
+					onChange={handleChange}
+					/>
+					<Textarea
+					label="Experience"
+					type="text"
+					name="experience"
+					value={formData.experience}
+					onChange={handleChange}
+					/>
+					<Textarea
+					label="Education"
+					type="text"
+					name="education"
+					value={formData.education}
+					onChange={handleChange}
+					/>
+					<Textarea
+					label="Skills"
+					type="text"
+					name="skills"
+					value={formData.skills}
+					onChange={handleChange}
+					/>
 
-				<div className='mt-2 mr-2 flex flex-col items-center'>
-					<Button className="mt-2" type="submit" color="success" variant='ghost' size="sm">
-					Save Changes
-					</Button>
-					<Button className="mt-4 mb-4" onClick={handleCancelClick} color="danger" variant='ghost' size="sm">
-					Cancel
-					</Button>
-				</div>
-			</form>
+					<Input
+					label="Upload CV"
+					name="cv"
+					type="file"
+					accept=".pdf"
+					onChange={handleChange}
+					/>
 
+					<div className='mt-2 mr-2 flex flex-col items-center'>
+						<Button
+							type="submit"
+							color="success"
+							size="sm"
+							variant='ghost'
+							className="mt-2"
+						>
+						Save Changes
+						</Button>
+
+						<Button className="mt-4 mb-4" onClick={handleCancelClick} color="danger" variant='ghost' size="sm">
+						Cancel
+						</Button>
+					</div>
+				</form>
+
+			</div>
 		</div>
-    </div>
-  );
+	);
 }
