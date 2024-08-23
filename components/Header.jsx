@@ -63,14 +63,14 @@ export default function Header() {
                     <UsersIcon className={cn("h-5", path === '/network' && "text-black fill-blue-500")} />
                 </Link>
 
-                <Link href="/listings" title="Jobs">
+                <Link href="/jobs" title="Jobs">
                     <Briefcase className={cn("h-5", path === '/listings' && "text-black fill-blue-500")} />
                 </Link>
 
                 <Link href="/communication" title="Communication">
                     <MessageSquare className={cn("h-5", path === '/communication' && "text-black fill-blue-500")} />
                 </Link>
-                <Link href="/receivefriendrequest" title="Notifications">
+                <Link href="/notifications" title="Notifications">
                     <BellRing className={cn("h-5", path === '/notifications' && "text-black fill-blue-500")} />
                 </Link>
             </div>

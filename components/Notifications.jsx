@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@nextui-org/react";
 
-export default function ReceiveFriendRequests() {
+export default function notifications() {
     const [requests, setRequests] = useState([]);
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);

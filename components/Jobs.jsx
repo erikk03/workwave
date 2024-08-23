@@ -5,7 +5,7 @@ import { Button } from "@nextui-org/react";
 import { useRouter } from 'next/navigation';
 import { useSession } from "next-auth/react";
 
-export default function Listings() {
+export default function jobs() {
   const { data: session, status } = useSession();
   const [ads, setAds] = useState([]);
   const [loading, setLoading] = useState(true);

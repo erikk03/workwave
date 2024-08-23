@@ -16,6 +16,7 @@ export async function POST(req) {
         const { targetUserId } = await req.json();
 
         if (!targetUserId) {
+            console.error("fsfs");
             return new Response("Target user ID is required", { status: 400 });
         }
 
@@ -23,14 +24,17 @@ export async function POST(req) {
         const targetUser = await User.findById(targetUserId);
 
         if (!targetUser) {
+            console.error("Target user ID is required but not provided");
             return new Response("User not found", { status: 404 });
         }
 
         if (user.friends.includes(targetUserId)) {
+            console.error("123123123d");
             return new Response("Already a friend", { status: 400 });
         }
 
         if (targetUser.pendingRequests.includes(session.user.userId)) {
+            console.error("T");
             return new Response("Friend request already sent", { status: 400 });
         }
 
