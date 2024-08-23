@@ -98,19 +98,9 @@ export default function Network() {
 
     return (
         <div className="col-span-full md:col-span-6 md:max-w-2xl xl:col-span-4 xl:max-w-5xl sm:max-w-md mx-auto w-full">
-            <div className="mt-5 bg-white rounded-xl border border-black p-6">
-                <div className="ml-1 mr-1 flex items-center justify-between mb-1">
-                    <h1 className="text-2xl font-semibold mb-4">Your Network</h1>
-                    <div className="flex justify-end mb-4">
-                        <Button
-                            onClick={() => router.push('/friendrequest')}
-                            color="primary"
-                            variant="ghost"
-                            size="sm"
-                        >
-                            Connect with Someone
-                        </Button>
-                    </div>
+            <div className="mt-5 bg-white rounded-xl p-6">
+                <div className="ml-1 mr-1 flex items-center justify-center mb-1">
+                    <h1 className="text-2xl font-semibold mb-4">My Network</h1>
                 </div>
                 {loading ? (
                     <div className="text-center">Loading...</div>
@@ -120,7 +110,7 @@ export default function Network() {
                     friends.map(friend => (
                         <div
                             key={friend._id}
-                            className="ml-1 mr-1 flex items-center mb-4 cursor-pointer bg-gray-100 p-3 rounded-2xl hover:bg-gray-200 transition"
+                            className="ml-1 mr-1 flex items-center mb-4 cursor-pointer bg-gray-100 p-1 rounded-xl hover:bg-gray-200 transition"
                             onClick={() => goToUserProfile(friend._id)}
                         >
                             {friend.profileImage ? (
@@ -151,7 +141,7 @@ export default function Network() {
                 )}
 
                 {/* Search bar */}
-                <hr className="mb-4" style={{ borderColor: "black" }} />
+                <hr className="mb-4" style={{ borderColor: "gray" }} />
                 <div className="ml-1 mr-1 mt-1 flex items-center space-x-2">
                     <input
                         placeholder="Search users..."
@@ -159,16 +149,17 @@ export default function Network() {
                         onChange={(e) => setSearchQuery(e.target.value)}
                         onKeyDown={handleKeyPress}
                         className="flex-1 outline-none rounded-full px-4 bg-gray-200"
+                        style={{ height: '35px' }}
                     />
-                    <Button onClick={handleSearch} radius="full" color="primary" size="md">Search</Button>
+                    <Button onClick={handleSearch} radius="full" color="primary" variant="ghost" size="sm">Search</Button>
                 </div>
 
                 {/* Display search results */}
                 <div className="ml-1 mr-1 mt-6">
-                    <h2 className="text-xl font-semibold mb-2">Search Results</h2>
+                    <h2 className="text-xl font-semibold mb-1">Users</h2>
                     <ul className="border-gray-300 rounded-xl border max-h-[500px] overflow-y-auto">
                         {users.map(user => (
-                            <li key={user._id} className="flex items-center justify-between bg-gray-100 p-3 rounded-lg mb-3">
+                            <li key={user._id} className="flex items-center mt-2 ml-2 mr-2 mb-2 justify-between bg-gray-100 p-1 rounded-lg">
                                 <a 
                                     href={`/userinfo/${user._id}`} 
                                     className="text-blue-600 flex items-center hover:underline"

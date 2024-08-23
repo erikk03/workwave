@@ -64,7 +64,7 @@ export default function Header() {
                 </Link>
 
                 <Link href="/jobs" title="Jobs">
-                    <Briefcase className={cn("h-5", path === '/listings' && "text-black fill-blue-500")} />
+                    <Briefcase className={cn("h-5", path === '/jobs' && "text-black fill-blue-500")} />
                 </Link>
 
                 <Link href="/communication" title="Communication">
