@@ -25,6 +25,15 @@ export default async function updateUserInfo(formData, session) {
         if (value) user[field] = value.toString();
     });
 
+    // Update visibility settings
+    const visibilityFields = ['firstName', 'lastName', 'email', 'phone', 'position', 'industry', 'experience', 'education', 'skills', 'cv'];
+    visibilityFields.forEach(field => {
+        const visibilityValue = formData.get(`visibilitySettings.${field}`);
+        if (visibilityValue !== null) {
+            user.visibilitySettings[field] = visibilityValue === 'true';
+        }
+    });
+
     const cv = formData.get("cv");
 
 
@@ -55,7 +64,7 @@ export default async function updateUserInfo(formData, session) {
 
     // Save the updated document
     await user.save();
-
     console.log('>>>User Information updated succesfully!');
+
     redirect(`/userinfo/${user._id.toString()}`);
 }

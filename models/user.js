@@ -16,7 +16,20 @@ const userSchema = new Schema({
     cv: { type: String, default: null }, // Field for storing the CV file path or URL
     isAdmin: { type: Boolean, default: false },
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    pendingRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+    pendingRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    visibilitySettings: {
+        firstName: { type: Boolean, default: true },
+        lastName: { type: Boolean, default: true },
+        email: { type: Boolean, default: true },
+        phone: { type: Boolean, default: true },
+        profileImage: { type: Boolean, default: true },
+        position: { type: Boolean, default: true },
+        industry: { type: Boolean, default: true },
+        experience: { type: Boolean, default: true },
+        education: { type: Boolean, default: true },
+        skills: { type: Boolean, default: true },
+        cv: { type: Boolean, default: true },
+    },
 }, { timestamps: true });
 
 // Ensure only one instance of the model is created
