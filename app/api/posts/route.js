@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import connectDB from "@/mongodb/db"; // Import the connectDB function from the appropriate file
+import { connectMongoDB } from "@/lib/mongodb";
 import Post from "@/models/post"; // Import the Post model
 import { useSession } from "next-auth/react";
 
@@ -12,7 +12,8 @@ export async function POST(request) {
 
 
     try {
-        await connectDB();
+        await connectMongoDB();
+        console.log("MongoDB connection established.");
         const { user, text, mediaUrl, mediaType } = await request.json();
 
         const postData = {
@@ -35,7 +36,8 @@ export async function POST(request) {
 
 export async function GET(request) {
     try {
-        await connectDB();
+        await connectMongoDB();
+        console.log("MongoDB connection established.");
         const posts = await Post.getAllPosts();
 
         return NextResponse.json({ posts });
