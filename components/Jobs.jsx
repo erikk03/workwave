@@ -1,179 +1,201 @@
 "use client";
-
 import { useState, useEffect } from "react";
-import { Button, Dropdown, DropdownMenu, DropdownItem, DropdownTrigger} from "@nextui-org/react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
+import { Button, Dropdown, DropdownMenu, DropdownItem, DropdownTrigger } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
-import {Trash2, Eye} from "lucide-react";
+import { Trash2, Eye } from "lucide-react";
 
-export default function jobs() {
-	const {isOpen, onOpen, onOpenChange} = useDisclosure();
-	const { data: session, status } = useSession();
-	const [ads, setAds] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [creating, setCreating] = useState(false);
-	const [error, setError] = useState(null);
-	const [newAd, setNewAd] = useState({
-		title: "",
-		description: "",
-		skillsRequired: "",
-		location: "",
-		employmentType: "Full-time",
-		salary: "",
-		company: ""
-	});
-	const [applications, setApplications] = useState([]);
-	const [viewingApplications, setViewingApplications] = useState(false);
-	const [selectedListingId, setSelectedListingId] = useState(null);
+export default function Jobs() {
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const { data: session, status } = useSession();
+    const [ads, setAds] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [creating, setCreating] = useState(false);
+    const [error, setError] = useState(null);
+    const [newAd, setNewAd] = useState({
+        title: "",
+        description: "",
+        skillsRequired: "",
+        location: "",
+        employmentType: "Full-time",
+        salary: "",
+        company: ""
+    });
+    const [applications, setApplications] = useState([]);
+    const [viewingApplications, setViewingApplications] = useState(false);
+    const [selectedListingId, setSelectedListingId] = useState(null);
+    const [appliedListings, setAppliedListings] = useState({}); // Store applied listings for quick lookup
 
-	useEffect(() => {
-		const fetchAds = async () => {
-			try {
-				const response = await fetch('/api/listings');
-				if (!response.ok) throw new Error("Failed to fetch ads");
-				const data = await response.json();
-				setAds(data);
-			} catch (error) {
-				setError(error.message);
-			} finally {
-				setLoading(false);
-			}
-		};
+    useEffect(() => {
+        const fetchAds = async () => {
+            try {
+                const response = await fetch('/api/listings');
+                if (!response.ok) throw new Error("Failed to fetch ads");
+                const data = await response.json();
+                setAds(data);
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    	fetchAds();
-  	}, []);
+        const fetchUserApplications = async () => {
+            if (status === "loading" || !session?.user?.userId) return;
 
-	const handleInputChange = (e) => {
-		const { name, value } = e.target;
-		setNewAd(prevState => ({ ...prevState, [name]: value }));
-	};
+            try {
+                const response = await fetch(`/api/application?applicant_id=${session.user.userId}`);
+                if (!response.ok) throw new Error("Failed to fetch applications");
+                const data = await response.json();
+                const appliedListingIds = data.reduce((acc, app) => {
+                    acc[app.listingId] = true;
+                    return acc;
+                }, {});
+                setAppliedListings(appliedListingIds);
+            } catch (error) {
+                setError(error.message);
+            }
+        };
 
-	const createAd = async () => {
-		if (status === "loading") return;
-		if (!session?.user?.userId) {
-			alert("User not authenticated");
-			return;
-		}
+        fetchAds();
+        fetchUserApplications();
+    }, [status, session?.user?.userId]);
 
-    	setCreating(true);
-		try {
-			const response = await fetch('/api/listings', {
-				method: "POST",
-				headers: {
-				"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ ...newAd, postedById: session.user.userId }),
-			});
-			if (!response.ok) throw new Error("Failed to create ad");
-			const data = await response.json();
-			setAds([...ads, data]);
-			setNewAd({
-				title: "",
-				description: "",
-				skillsRequired: "",
-				location: "",
-				employmentType: "Full-time",
-				salary: "",
-				company: ""
-			});
-		} catch (error) {
-			alert(`Error: ${error.message}`);
-		} finally {
-			setCreating(false);
-		}
-	};
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setNewAd(prevState => ({ ...prevState, [name]: value }));
+    };
 
-	const deleteAd = async (adId) => {
-		try {
-			const response = await fetch(`/api/listings/${adId}`, {
-			method: "DELETE",
-			});
-			if (!response.ok) throw new Error("Failed to delete ad");
-			setAds(ads.filter(ad => ad._id !== adId));
-		} catch (error) {
-			alert(`Error: ${error.message}`);
-		}
-	};
+    const createAd = async () => {
+        if (status === "loading") return;
+        if (!session?.user?.userId) {
+            alert("User not authenticated");
+            return;
+        }
 
-	const applyToAd = async (adId) => {
-		if (status === "loading") return;
-		if (!session?.user?.userId) {
-			alert("User ID is missing");
-			return;
-		}
+        setCreating(true);
+        try {
+            const response = await fetch('/api/listings', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ ...newAd, postedById: session.user.userId }),
+            });
+            if (!response.ok) throw new Error("Failed to create ad");
+            const data = await response.json();
+            setAds([...ads, data]);
+            setNewAd({
+                title: "",
+                description: "",
+                skillsRequired: "",
+                location: "",
+                employmentType: "Full-time",
+                salary: "",
+                company: ""
+            });
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+        } finally {
+            setCreating(false);
+        }
+    };
 
-		try {
-			const response = await fetch('/api/application', {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-				listingId: adId,
-				applicantId: session.user.userId,
-				coverLetter: "Your cover letter here",
-				resume: "Link to your resume or file path"
-			}),
-		});
+    const deleteAd = async (adId) => {
+        try {
+            const response = await fetch(`/api/listings/${adId}`, {
+                method: "DELETE",
+            });
+            if (!response.ok) throw new Error("Failed to delete ad");
+            setAds(ads.filter(ad => ad._id !== adId));
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+        }
+    };
 
-			if (!response.ok) throw new Error("Failed to apply");
-			alert("Application submitted!");
-    	} catch (error) {
-      		alert(`Error: ${error.message}`);
-   		}
-  	};
+    const applyToAd = async (adId) => {
+        if (status === "loading") return;
+        if (!session?.user?.userId) {
+            alert("User ID is missing");
+            return;
+        }
 
-	const viewApplications = async (adId) => {
-		try {
-			const response = await fetch(`/api/application?listing_id=${adId}`);
-			if (!response.ok) throw new Error("Failed to fetch applications");
-			const data = await response.json();
-			setApplications(data);
-			setSelectedListingId(adId);
-			setViewingApplications(true);
-		} catch (error) {
-			alert(`Error: ${error.message}`);
-		}
-	};
+        if (appliedListings[adId]) {
+            alert("You have already applied to this listing.");
+            return;
+        }
 
-	const updateApplicationStatus = async (appId, status) => {
-		try {
-			const response = await fetch(`/api/application/${appId}`, {
-				method: "PATCH",
-				headers: {
-				"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ status }),
-			});
-			if (!response.ok) throw new Error("Failed to update application status");
-			await response.json();
-			
-			// Remove applicant from the listing's applicants array
-			const ad = ads.find(ad => ad._id === selectedListingId);
-			const updatedApplicants = ad.applicants.filter(applicant => applicant.toString() !== applications.find(app => app._id === appId).applicantId.toString());
-			
-			setAds(ads.map(ad => ad._id === selectedListingId ? { ...ad, applicants: updatedApplicants } : ad));
+        try {
+            const response = await fetch('/api/application', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    listingId: adId,
+                    applicantId: session.user.userId,
+                    resume: null,
+                }),
+            });
+            if (!response.ok) throw new Error("Failed to apply");
+            alert("Application submitted!");
+            setAppliedListings(prev => ({ ...prev, [adId]: true }));
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+        }
+    };
 
-			// Remove the application from the list
-			setApplications(applications.filter(app => app._id !== appId));
+    const viewApplications = async (adId) => {
+        try {
+            const response = await fetch(`/api/application?listing_id=${adId}`);
+            if (!response.ok) throw new Error("Failed to fetch applications");
+            const data = await response.json();
+            setApplications(data);
+            setSelectedListingId(adId);
+            setViewingApplications(true);
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+        }
+    };
 
-			// If no applications are left, update the view
-			if (applications.length === 1) { // Because the application was just removed
-				setViewingApplications(false);
-				alert("No applications for this listing.");
-			}
-		} catch (error) {
-			alert(`Error: ${error.message}`);
-		}
-	};
+    const updateApplicationStatus = async (appId, status) => {
+        try {
+            const response = await fetch(`/api/application/${appId}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ status }),
+            });
+            if (!response.ok) throw new Error("Failed to update application status");
+            await response.json();
 
-	const closeApplicationsView = () => {
-		setViewingApplications(false);
-		setApplications([]);
-	};
+            // Remove applicant from the listing's applicants array
+            const ad = ads.find(ad => ad._id === selectedListingId);
+            const updatedApplicants = ad.applicants.filter(applicant => applicant.toString() !== applications.find(app => app._id === appId).applicantId.toString());
 
-	if (status === "loading") return <div>Loading...</div>;
-	if (error) return <div>Error: {error}</div>;
+            setAds(ads.map(ad => ad._id === selectedListingId ? { ...ad, applicants: updatedApplicants } : ad));
+
+            // Remove the application from the list
+            setApplications(applications.filter(app => app._id !== appId));
+
+            // If no applications are left, update the view
+            if (applications.length === 1) { // Because the application was just removed
+                setViewingApplications(false);
+                alert("No applications for this listing.");
+            }
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+        }
+    };
+
+    const closeApplicationsView = () => {
+        setViewingApplications(false);
+        setApplications([]);
+    };
+
+    if (status === "loading") return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
 
   	return (
     <div className="col-span-full md:col-span-6 md:max-w-2xl xl:col-span-4 xl:max-w-5xl sm:max-w-md mx-auto w-full">
