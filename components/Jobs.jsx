@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Button, Dropdown, DropdownMenu, DropdownItem, DropdownTrigger} from "@nextui-org/react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
 import { useSession } from "next-auth/react";
+import {Trash2, Eye} from "lucide-react";
 
 export default function jobs() {
 	const {isOpen, onOpen, onOpenChange} = useDisclosure();
@@ -266,12 +267,12 @@ export default function jobs() {
 							/>
 						</ModalBody>
 						<ModalFooter>
-							<Button color="danger" variant="light" onPress={onClose}>
-                  				Close
-                			</Button>
-							<Button color="success" onClick={createAd} onPress={onClose} >
+							<Button size="sm" color="success" onClick={createAd} onPress={onClose} >
 								Create
 							</Button>
+							<Button size="sm" color="danger" variant="light" onPress={onClose}>
+                  				Close
+                			</Button>
 						</ModalFooter>
 					</>
 				)}
@@ -297,7 +298,7 @@ export default function jobs() {
 									variant="ghost"
 									onClick={() => viewApplications(ad._id)}
 								>
-									View Applications
+									<Eye size={15}/>View Applications
 								</Button>
 								<Button
 									color="danger"
@@ -305,7 +306,7 @@ export default function jobs() {
 									variant="ghost"
 									onClick={() => deleteAd(ad._id)}
 								>
-									Delete
+									<Trash2 size={15}/>Delete
 								</Button>
 							</div>
 						) : (
