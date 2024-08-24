@@ -312,13 +312,18 @@ export default function jobs() {
 						) : (
 							<div className="flex justify-end">
 								<Button
-									color="primary"
-									size="sm"
-									variant="ghost"
-									onClick={() => applyToAd(ad._id)}
-								>
-									Apply
-								</Button>
+                                    color={
+                                        appliedListings[ad._id] ? "default" : "primary"
+                                    }
+                                    size="sm"
+									variant={
+                                        appliedListings[ad._id] ? "faded" : "ghost"
+                                    }
+                                    onClick={() => applyToAd(ad._id)}
+                                    disabled={appliedListings[ad._id]}
+                                >
+                                    {appliedListings[ad._id] ? 'Already Applied' : 'Apply'}
+                                </Button>
 							</div>
 						)}
 					</div>
