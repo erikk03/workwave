@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Avatar } from "@nextui-org/avatar";
 import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 
 export default function Network() {
     const [friends, setFriends] = useState([]);
@@ -15,6 +16,7 @@ export default function Network() {
     const [sentRequests, setSentRequests] = useState(new Set()); // Track sent requests
     const [friendIds, setFriendIds] = useState(new Set()); // Track friend IDs
     const router = useRouter();
+    const { data: session, status } = useSession();
 
     useEffect(() => {
         const fetchFriends = async () => {
@@ -110,7 +112,7 @@ export default function Network() {
                     friends.map(friend => (
                         <div
                             key={friend._id}
-                            className="ml-1 mr-1 flex items-center mb-4 cursor-pointer bg-gray-100 p-1 rounded-xl hover:bg-gray-200 transition"
+                            className="ml-1 mr-1 flex items-center mb-4 cursor-pointer bg-gray-100 p-1 rounded-xl hover:bg-gray-200 transition border max-h-[500px] overflow-y-auto"
                             onClick={() => goToUserProfile(friend._id)}
                         >
                             {friend.profileImage ? (
@@ -132,6 +134,9 @@ export default function Network() {
                             <div className="ml-4">
                                 <h2 className="text-lg font-medium">
                                     {friend.firstName} {friend.lastName}
+                                </h2>
+                                <h2 className="text-sm">
+                                    {friend.position} at {friend.industry}
                                 </h2>
                             </div>
                         </div>
@@ -158,7 +163,7 @@ export default function Network() {
                 <div className="ml-1 mr-1 mt-6">
                     <h2 className="text-xl font-semibold mb-1">Users</h2>
                     <ul className="border-gray-300 rounded-xl border max-h-[500px] overflow-y-auto">
-                        {users.map(user => (
+                        {users.filter(user => !user.isAdmin && user._id !== session.user.userId).map(user => (
                             <li key={user._id} className="flex items-center mt-2 ml-2 mr-2 mb-2 justify-between bg-gray-100 p-1 rounded-lg">
                                 <a 
                                     href={`/userinfo/${user._id}`} 

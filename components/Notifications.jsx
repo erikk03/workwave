@@ -104,7 +104,7 @@ export default function notifications() {
                 <hr className="mt-2 mb-2"/>
                 {notifications.length > 0 ? (
                     <ul>
-                        {notifications.map((notification) => (
+                        {notifications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((notification) => (
                             <div key={notification._id} className="mt-2 rounded-md hover:bg-gray-200">
                                 {notification.type === "like" && (
                                     <p>

@@ -1,7 +1,13 @@
 import Network from "@/components/Network";
 import Header from "@/components/Header";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "../api/auth/[...nextauth]/route";
 
-export default function NetworkPage() {
+export default async function NetworkPage() {
+    const session = await getServerSession(authOptions);
+    if (!session) redirect("/");
+
     return (
     
     <div className="min-h-screen flex flex-col">

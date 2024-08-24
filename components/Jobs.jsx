@@ -278,7 +278,7 @@ export default function jobs() {
 				)}
 			</ModalContent>
 		</Modal>
-			{ads.map(ad => (
+			{ads.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map(ad => (
 				<div key={ad._id}>
 					<div className="mt-5 bg-white rounded-xl p-3">
 						<h2 className="flex justify-center font-bold">{ad.title}</h2>

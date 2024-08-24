@@ -11,7 +11,7 @@ export async function GET() {
 
         await connectMongoDB();
 
-        const user = await User.findById(session.user.userId).populate('friends', 'firstName lastName profileImage');
+        const user = await User.findById(session.user.userId).populate('friends', 'firstName lastName profileImage position industry');
 
         if (!user) return new Response("User not found", { status: 404 });
 
