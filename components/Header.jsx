@@ -1,6 +1,6 @@
 "use client";
 
-import { Briefcase, HomeIcon, MessageSquare, SearchIcon, UsersIcon, BellRing, UserCog, CircleUser } from "lucide-react";
+import { Briefcase, HomeIcon, MessageSquare, SearchIcon, UsersIcon, BellRing, UserCog, CircleUser, Crown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
@@ -55,6 +55,11 @@ export default function Header() {
             </div>
             
             <div className="flex-1 flex items-center space-x-2 justify-center">
+                {session.user.isAdmin && (
+                    <Link href="/admin" title="Admin">
+                        <Crown className={cn("h-5", path === '/admin' && "text-black fill-blue-500")} />
+                    </Link>
+                )}
                 <Link href="/feed" title="Home Page" >
                     <HomeIcon className={cn("h-5", path === '/feed' && "text-black fill-blue-500 ")} />
                 </Link>
