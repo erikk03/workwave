@@ -42,6 +42,7 @@
     "react-timeago": "^7.2.0",
     "react-tooltip": "^5.28.0",
     "tailwind-merge": "^2.4.0",
+    "xml-js": "^1.6.11",
     "zod": "^3.23.8"
   },
   "devDependencies": {

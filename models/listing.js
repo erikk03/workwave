@@ -17,3 +17,5 @@ const ListingSchema = new Schema({
 });
 
 export const Listing = models.Listing || mongoose.model("Listing", ListingSchema);
+
+
