@@ -45,7 +45,7 @@ export default async function createCommentAction(postId, formData, session) {
         postId: postId,
         createdAt: new Date(),
     }
-    console.log("notification", notification);
+    
 
     try {
         await post.commentOnPost(comment);

@@ -12,12 +12,14 @@ async function PostFeed({posts}) {
 
     const user = await User.findById(session.user.userId);
     const user_friends = user.friends;
+    const user_friendsId = user_friends.map(friend => friend.toString());
 
-    // Filter posts to include only those from friends
-    const filteredPosts = posts?.filter(
-        post => user_friends.includes(post.user.userId)     // friends posts
-        + (post.user.userId === session.user.userId)        // my posts
-        + (post.user.userId === '66bf7cb42d28250e53b99990') // admins posts
+    // Filter posts to include only those from friends, the user, admin, or liked by friends
+    const filteredPosts = posts?.filter(post => 
+        user_friendsId.includes(post.user.userId) ||  // Friends' posts
+        post.user.userId === session.user.userId  || // My posts
+        post.user.userId === '66bf7cb42d28250e53b99990' ||  // Admin's posts
+        post.likes.some(like => user_friendsId.includes(like))  // Posts liked by friends
     );
 
     return <div className="space-y-5 pb-20">

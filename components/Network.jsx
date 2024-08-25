@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 
+
 export default function Network() {
     const [friends, setFriends] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -94,6 +95,29 @@ export default function Network() {
         }
     };
 
+    const handleRemoveFriend = async (friendId) => {
+        try {
+            const response = await fetch("/api/friends/remove", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ friendId }),
+            });
+            if (!response.ok) throw new Error("Failed to remove friend");
+
+            // Update friends state to remove the friend from the list
+            setFriends(prevFriends => prevFriends.filter(friend => friend._id !== friendId));
+            setFriendIds(prevIds => {
+                const updatedIds = new Set(prevIds);
+                updatedIds.delete(friendId);
+                return updatedIds;
+            });
+        } catch (error) {
+            alert(error.message);
+        }
+    };
+
     const goToUserProfile = (userId) => {
         router.push(`/userinfo/${userId}`);
     };
@@ -131,7 +155,7 @@ export default function Network() {
                                 />
                             )}
 
-                            <div className="ml-4">
+                            <div className="ml-4 flex-1">
                                 <h2 className="text-lg font-medium">
                                     {friend.firstName} {friend.lastName}
                                 </h2>
@@ -139,6 +163,17 @@ export default function Network() {
                                     {friend.position} at {friend.industry}
                                 </h2>
                             </div>
+                            <Button
+                                onClick={(e) => {
+                                    e.stopPropagation(); // Prevent clicking on the button from triggering the parent div's click event
+                                    handleRemoveFriend(friend._id);
+                                }}
+                                size="sm"
+                                color="danger"
+                                variant="solid"
+                            >
+                                Remove
+                            </Button>
                         </div>
                     ))
                 ) : (

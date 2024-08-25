@@ -9,16 +9,59 @@ import ReactTimeago from "react-timeago";
 import Image from "next/image"
 import deletePostAction from "@/actions/deletePostAction";
 import PostOptions from "./PostOptions";
+// import { useEffect, useState } from "react"; // Import useEffect and useState
 // import { toast } from "sonner";
 
-function Post({post}) {
+
+function Post({ post }) {
     const { data: session, status } = useSession();
     const user = session?.user;
 
+    // const [userFriendsId, setUserFriendsId] = useState([]);
+    // const [likedByFriend, setLikedByFriend] = useState(false);
+    // const [isFriend, setIsFriend] = useState(false);
+
     const isAuthor = user?.userId === post.user.userId;
 
+    // useEffect(() => {
+    //     // Fetch the user's friends list from the backend or any relevant source
+    //     const fetchUserFriends = async () => {
+    //         if (!user?.userId) return;
 
+    //         try {
+    //             // Replace this with your actual API call to fetch friends' IDs
+    //             const response = await fetch(`/api/friends/list`);
+    //             const friendsData = await response.json();
+    //             setUserFriendsId(friendsData.map(friend => friend.userId)); // Assuming friendsData is an array of friend objects
 
+    //         } catch (error) {
+    //             console.error("Error fetching friends list:", error);
+    //         }
+    //     };
+
+    //     fetchUserFriends();
+    // }, [user]);
+
+    // useEffect(() => {
+    //     // Check if the post was liked by a friend
+    //     const checkLikedByFriend = () => {
+    //         if (userFriendsId.length === 0 || post.likes.length === 0) return;
+
+    //         const likedBy = post.likes.some(like => userFriendsId.includes(like));
+    //         setLikedByFriend(likedBy);
+
+    //         // Check if post owner is a friend
+    //         const ownerIsFriend = userFriendsId.includes(post.user.userId);
+    //         setIsFriend(ownerIsFriend);
+    //     };
+
+    //     checkLikedByFriend();
+    // }, [userFriendsId, post.likes, post.user.userId]);
+
+    // // Condition to show "Liked by a friend" label
+    // const showLikedByFriendLabel = likedByFriend && !isFriend && !isAuthor;
+
+    
     return (
     <div className="bg-white rounded-xl border mt-2">
         <div className="ml-0 p-4 flex space-x-2">
@@ -119,6 +162,16 @@ function Post({post}) {
             postId={post._id.toString()}
             post={post}
         />
+
+        {/* {showLikedByFriendLabel && (
+                <Badge
+                    className="absolute top-2 right-2"
+                    variant="flat"
+                    color="primary"
+                >
+                    Liked by a friend
+                </Badge>
+            )} */}
         
     </div>
     );

@@ -1,5 +1,6 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import Post from "@/models/post";
+import { Listing } from "@/models/listing"; // Import Listing model
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
 import { NextResponse } from "next/server";
@@ -16,7 +17,7 @@ export async function GET(request) {
         await connectMongoDB();
         const userId = session.user.userId;
         
-        // Find posts by the logged-in user and populate notifications
+        // Fetch notifications from posts
         const posts = await Post.find({ "user.userId": userId })
             .populate({
                 path: "notifications",
@@ -24,19 +25,31 @@ export async function GET(request) {
             })
             .lean();
 
-        if (!posts || posts.length === 0) {
-            return NextResponse.json({ notifications: [] });
-        }
+        // Fetch notifications from listings
+        const listings = await Listing.find({ "postedById": userId })
+            .populate({
+                path: "notifications",
+                select: "type userId userFirstName userLastName comment createdAt",
+            })
+            .lean();
 
-        // Collect all notifications from the user's posts
-        const notifications = posts.reduce((acc, post) => {
+        // Collect all notifications from the user's posts and listings
+        const postNotifications = posts.reduce((acc, post) => {
             const postNotifications = Array.isArray(post.notifications) ? post.notifications : [];
             acc.push(...postNotifications);
             return acc;
         }, []);
 
+        const listingNotifications = listings.reduce((acc, listing) => {
+            const listingNotifications = Array.isArray(listing.notifications) ? listing.notifications : [];
+            acc.push(...listingNotifications);
+            return acc;
+        }, []);
+
+        const allNotifications = [...postNotifications, ...listingNotifications];
+
         // Convert fields to strings and return notifications
-        const plainNotifications = notifications.map(notification => ({
+        const plainNotifications = allNotifications.map(notification => ({
             _id: notification._id ? notification._id.toString() : null,
             type: notification.type ? notification.type.toString() : null,
             userId: notification.userId ? notification.userId.toString() : null,

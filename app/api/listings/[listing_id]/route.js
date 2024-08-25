@@ -1,7 +1,7 @@
 import { Listing } from "@/models/listing";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
 import { NextResponse } from 'next/server';
+import { authOptions } from "../../auth/[...nextauth]/route";
 
 export async function GET(req, { params }) {
     try {
@@ -62,7 +62,9 @@ export async function DELETE(req, { params }) {
             return new NextResponse("Forbidden", { status: 403 });
         }
 
-        await listing.remove();
+        // await listing.remove();
+
+        await Listing.deleteOne({ _id: params.listing_id });
         return new NextResponse("Listing deleted", { status: 200 });
     } catch (error) {
         console.error("Error deleting listing:", error);
