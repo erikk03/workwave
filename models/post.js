@@ -66,7 +66,6 @@ PostSchema.methods.commentOnPost = async function (commentToAdd) {
 PostSchema.methods.addCommentNotification = async function (notificationToAdd) {
     try {
         const notification = await Notification.create(notificationToAdd);
-        console.log("notification", notification);
     
         // Push the notification's ObjectId into the post's notifications array
         this.notifications.push(notification._id);
@@ -81,7 +80,6 @@ PostSchema.methods.addCommentNotification = async function (notificationToAdd) {
 PostSchema.methods.addLikeNotification = async function (notificationToAdd) {
     try {
         const notification = await Notification.create(notificationToAdd);
-        console.log("notification", notification);
     
         // Push the notification's ObjectId into the post's notifications array
         this.notifications.push(notification._id);

@@ -1,9 +1,9 @@
-import connectDB from "@/mongodb/db";
+import { connectMongoDB } from "@/lib/mongodb";
 import Post from "@/models/post"; // Importing Post as default
 import { NextResponse } from "next/server";
 
 export async function GET(request, { params }) {
-    await connectDB();
+    await connectMongoDB();
     try {
         const post = await Post.findById(params.post_id);
 

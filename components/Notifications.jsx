@@ -2,12 +2,18 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@nextui-org/react";
+// import Post from "@/models/post";
+import Post from "./Post";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
 
 export default function notifications() {
     const [requests, setRequests] = useState([]);
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const [selectedPost, setSelectedPost] = useState(null);
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -69,6 +75,21 @@ export default function notifications() {
         }
     };
 
+    const popUpPost = async (postId) => {
+        try {
+            // Replace with an actual API call to get the post data
+            const response = await fetch(`/api/posts/${postId}`);
+            if (!response.ok) throw new Error("Failed to fetch the post");
+
+            const post = await response.json();
+            setSelectedPost(post);
+            onOpen();
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
@@ -105,7 +126,11 @@ export default function notifications() {
                 {notifications.length > 0 ? (
                     <ul>
                         {notifications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((notification) => (
-                            <div key={notification._id} className="mt-2 rounded-md hover:bg-gray-200">
+                            <div
+                                key={notification._id}
+                                className="mt-2 rounded-md hover:bg-gray-200"
+                                onClick={() => popUpPost(notification.postId)}
+                            >
                                 {notification.type === "like" && (
                                     <p>
                                         <span className="font-bold">{notification.userFirstName} {notification.userLastName}</span> liked your post
@@ -123,6 +148,21 @@ export default function notifications() {
                     <p>No notifications.</p>
                 )}
             </div>
+
+            {/* Modal for displaying a post */}
+            {selectedPost && (
+                <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop="opaque" placement="center">
+                    <ModalContent>
+                        <ModalHeader></ModalHeader>
+                        <ModalBody>
+                            <div>
+                                <Post key={selectedPost._id} post={selectedPost} />
+                            </div>
+                        </ModalBody>
+                        <ModalFooter></ModalFooter>
+                    </ModalContent>
+                </Modal>
+            )}
         </div>
     );
 }

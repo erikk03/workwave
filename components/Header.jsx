@@ -56,8 +56,8 @@ export default function Header() {
             
             <div className="flex-1 flex items-center space-x-2 justify-center">
                 {session.user.isAdmin && (
-                    <Link href="/admin" title="Admin">
-                        <Crown className={cn("h-5", path === '/admin' && "text-black fill-blue-500")} />
+                    <Link href="/admin" title="Admin Page">
+                        <Crown className={cn("h-5", path === '/admin' && "text-black fill-yellow-400")} />
                     </Link>
                 )}
                 <Link href="/feed" title="Home Page" >

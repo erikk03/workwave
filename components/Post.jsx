@@ -6,7 +6,6 @@ import { Badge } from "@nextui-org/badge";
 import { Button } from "@nextui-org/button";
 import { Trash2 } from "lucide-react";
 import ReactTimeago from "react-timeago";
-// import {Image} from "@nextui-org/image";
 import Image from "next/image"
 import deletePostAction from "@/actions/deletePostAction";
 import PostOptions from "./PostOptions";

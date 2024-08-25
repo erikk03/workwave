@@ -5,6 +5,7 @@ const NotificationSchema = new Schema({
     userId: { type: String, required: true },
     userFirstName: { type: String, required: true },
     userLastName: { type: String, required: true },
+    postId: {type: String, required: true},
     comment: { type: String }, // Optional, only for comment notifications
     createdAt: { type: Date, default: Date.now },
 }, {

@@ -47,6 +47,7 @@ export async function POST(request, { params }) {
             userId: userId,
             userFirstName: user.firstName,
             userLastName: user.lastName,
+            postId: post._id.toString(),
             createdAt: new Date(),
         }
 
