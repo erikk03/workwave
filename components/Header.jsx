@@ -111,7 +111,7 @@ export default function Header() {
                                 My Profile
                             </a>
                         </Link>
-                        <Link href=""legacyBehavior>
+                        <Link href={`/settings/${session.user.userId}`} legacyBehavior>
                             <a
                                 className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-300">
                                 <UserCog className="mr-2"/>

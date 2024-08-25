@@ -19,7 +19,7 @@ export default async function updateUserInfo(formData, session) {
     }
     
     // Update user fields
-    const fields = ['firstName', 'lastName', 'email', 'phone', 'position', 'industry', 'experience', 'education', 'skills'];
+    const fields = ['firstName', 'lastName', 'email', 'phone', 'position', 'industry', 'experience', 'education', 'skills', 'password'];
     fields.forEach(field => {
         const value = formData.get(field);
         if (value) user[field] = value.toString();
