@@ -10,7 +10,6 @@ export async function GET(request, { params }) {
         if (!post) {
             return NextResponse.json({ error: "Post not found" }, { status: 404 });
         }
-
         return NextResponse.json(post);
     } catch (error) {
         return NextResponse.json(

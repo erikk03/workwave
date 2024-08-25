@@ -23,7 +23,6 @@ async function PostFeed({posts}) {
     );
 
     return <div className="space-y-5 pb-20">
-
         {filteredPosts?.map((post) => (
             <Post key={post._id} post={post} />
         ))}

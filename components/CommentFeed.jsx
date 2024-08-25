@@ -36,16 +36,16 @@ function CommentFeed( {post} ) {
                         <div className="flex justify-between">
                             <div>
                                 <p className="font-semibold">
-                                    {comment.user.firstName} {comment.user.lastName}
+                                    {comment?.user?.firstName} {comment?.user?.lastName}
                                     {/* <Badge>{isAuthor && "Author"}</Badge> */}
                                 </p>
                             </div>
                             <p className="text-xs text-gray-400">
-                                <ReactTimeago date={new Date(comment.createdAt)} />
+                                <ReactTimeago date={new Date(comment?.createdAt)} />
                             </p>
                         </div>
                         <p className="text-sm">
-                            {comment.text}
+                            {comment?.text}
                         </p>
                     </div>
                 </div>

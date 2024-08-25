@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@nextui-org/react";
-// import Post from "@/models/post";
 import Post from "./Post";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
 
