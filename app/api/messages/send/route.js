@@ -18,7 +18,7 @@ export async function POST(req) {
         }
 
         const { conversationId, message, recipient } = await req.json();
-        const senderId = session.user.id; // Make sure this matches how you store the user ID in the session
+        const senderId = session.user.userId; // Make sure this matches how you store the user ID in the session
 
         if (!conversationId || !message || !recipient) {
             return new Response(JSON.stringify({ error: 'Conversation ID and message are required.' }), {
@@ -45,7 +45,7 @@ export async function POST(req) {
         });
 
         // Populate the sender information
-        await newMessage.populate('sender', 'firstName lastName');
+        await newMessage.populate('sender', '_id firstName lastName');
 
         return new Response(JSON.stringify(newMessage), {
             status: 201,

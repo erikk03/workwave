@@ -16,7 +16,7 @@ export default async function CommunicationPage() {
             <Header />
         </header>
         
-        <Communication />
+        <Communication session={session}/>
     </div>
     );
 }
