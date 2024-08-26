@@ -189,9 +189,9 @@ export default function SelectedUsersContent() {
     };
 
     return (
-        <div className="p-6 bg-gray-100 min-h-screen">
+        <div className="p-6 bg-gray-100 min-h-screen overflow-auto">
             <h1 className="text-2xl font-semibold mb-6">Selected Users</h1>
-            <div className="bg-white p-4 rounded-xl shadow-sm">
+            <div className="bg-white p-4 rounded-xl shadow-sm overflow-auto">
                 {users.length === 0 ? (
                     <div>No users selected.</div>
                 ) : (
@@ -332,7 +332,7 @@ export default function SelectedUsersContent() {
                         </tbody>
                     </table>
                     <hr className=" mt-4 mb-4"/>
-                    <div className="flex space-x-2 justify-end">
+                    <div className="flex space-x-2 justify-start">
                         <Button size="sm" color="primary" onPress={downloadJson}>Download JSON</Button>
                         <Button size="sm" color="primary" onPress={downloadXml}>Download XML</Button>
                     </div>

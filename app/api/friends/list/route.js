@@ -14,7 +14,7 @@ export async function GET() {
         const user = await User.findById(session.user.userId).populate('friends', 'firstName lastName profileImage position industry');
 
         if (!user) return new Response("User not found", { status: 404 });
-
+        
         return new Response(JSON.stringify(user.friends), { status: 200 });
     } catch (error) {
         console.error("Error:", error);
