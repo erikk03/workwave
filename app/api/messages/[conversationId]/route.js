@@ -60,6 +60,7 @@ export async function GET(req) {
 
         const url = new URL(req.url);
         const conversationId = url.pathname.split('/')[3]; // Adjust according to your routing logic
+        // console.log("conv_id:", conversationId);
 
         if (!conversationId || conversationId === 'null') {
             return new Response(JSON.stringify({ error: 'Invalid conversation ID.' }), {
@@ -69,11 +70,11 @@ export async function GET(req) {
         }
 
         // Fetch messages after the last message timestamp
-        const lastMessageTimestamp = new Date(); // You might need to handle this differently
+        // const lastMessageTimestamp = new Date(); // You might need to handle this differently
 
         const newMessages = await Message.find({
             conversationId,
-            createdAt: { $gt: new Date(lastMessageTimestamp) }
+            // createdAt: { $gt: new Date(lastMessageTimestamp) }
         }).sort({ createdAt: 1 });
 
         return new Response(JSON.stringify(newMessages), {
@@ -119,7 +120,7 @@ export async function POST(req) {
             // Fetch messages after the last message timestamp
             newMessages = await Message.find({
                 conversationId,
-                createdAt: { $gt: new Date(lastMessageTimestamp) }
+                // createdAt: { $gt: new Date(lastMessageTimestamp) }
             }).sort({ createdAt: 1 });
 
             if (newMessages.length > 0) break;

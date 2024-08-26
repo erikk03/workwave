@@ -45,7 +45,7 @@ export async function POST(req) {
         });
 
         // Populate the sender information
-        await newMessage.populate('sender', '_id firstName lastName');
+        await newMessage.populate('sender', '_id firstName lastName profileImage');
 
         return new Response(JSON.stringify(newMessage), {
             status: 201,
