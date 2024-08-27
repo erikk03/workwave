@@ -169,7 +169,9 @@ const formatTime = (timestamp) => {
 
   return (
     <div className="flex h-[650px] p-4 space-x-4">
+      {/* Left Column */}
       <div className="w-1/4 space-y-4">
+        {/* Search Bar */}
         <div className="border p-2 bg-white rounded-xl border-black">
           <input
             type="text"
@@ -179,6 +181,7 @@ const formatTime = (timestamp) => {
             className="p-1 border rounded-full w-full"
           />
         </div>
+        {/* Find Users */}
         <div className="border p-2 bg-white rounded-xl border-black">
           <h3 className="font-bold">Find Users</h3>
           <div className="flex-1 border rounded-md p-1 max-h-[100px] overflow-y-auto">
@@ -197,6 +200,7 @@ const formatTime = (timestamp) => {
             )}
           </div>
         </div>
+        {/* Recent Chats */}
         <div className="border p-2 bg-white rounded-xl border-black">
           <h3 className="font-bold">Recent Chats</h3>
           <div className="flex-1 border-t rounded-md max-h-[430px] overflow-y-auto">
@@ -215,7 +219,9 @@ const formatTime = (timestamp) => {
         </div>
       </div>
 
+      {/* Right Column */}
       <div className="w-3/4 border p-2 flex flex-col bg-white rounded-xl max-h-[650px] border-black">
+        {/* Top Bar with Info */}
         {selectedConversation && (
           <div className="border p-2 bg-gray-200 rounded-md border-black">
             {conversations.map((conversation) => (
@@ -239,6 +245,7 @@ const formatTime = (timestamp) => {
           </div>
         )}
         
+        {/* Messages */}
         {selectedConversation ? (
           <>
             <div className="flex-1 mb-4">
