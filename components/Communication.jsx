@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import {Avatar} from "@nextui-org/react";
+import {Send, Phone, Video, EllipsisVertical} from 'lucide-react'
 
 const Communication = ({ session }) => {
   const [currentUser, setCurrentUser] = useState(session?.user);
@@ -167,9 +168,9 @@ const formatTime = (timestamp) => {
 };
 
   return (
-    <div className="flex h-screen p-4 space-x-4">
+    <div className="flex h-[650px] p-4 space-x-4">
       <div className="w-1/4 space-y-4">
-        <div className="border p-2 bg-white rounded-xl">
+        <div className="border p-2 bg-white rounded-xl border-black">
           <input
             type="text"
             placeholder="Search users..."
@@ -178,7 +179,7 @@ const formatTime = (timestamp) => {
             className="p-1 border rounded-full w-full"
           />
         </div>
-        <div className="border p-2 bg-white rounded-xl">
+        <div className="border p-2 bg-white rounded-xl border-black">
           <h3 className="font-bold">Find Users</h3>
           <div className="flex-1 border rounded-md p-1 max-h-[100px] overflow-y-auto">
             {filteredUsers.length > 0 ? (
@@ -196,15 +197,15 @@ const formatTime = (timestamp) => {
             )}
           </div>
         </div>
-        <div className="border p-2 bg-white rounded-xl">
+        <div className="border p-2 bg-white rounded-xl border-black">
           <h3 className="font-bold">Recent Chats</h3>
-          <div className="flex-1 border-t rounded-md p-1 max-h-[430px] overflow-y-auto">
+          <div className="flex-1 border-t rounded-md max-h-[430px] overflow-y-auto">
             <div className="flex-1 space-y-2 overflow-auto">
               {conversations.map((conversation) => (
                 <div
                   key={conversation._id}
                   onClick={() => fetchMessages(conversation._id)}
-                  className={`p-4 rounded-md cursor-pointer hover:bg-gray-300 ${selectedConversation === conversation._id && 'bg-gray-300'}`}
+                  className={`p-2 rounded-md cursor-pointer hover:bg-gray-200 ${selectedConversation === conversation._id && 'bg-gray-200' }`}
                 >
                   {conversation.participants.filter(p => p._id !== currentUser.userId).map((p) => `${p.firstName} ${p.lastName}`)}
                 </div>
@@ -213,11 +214,35 @@ const formatTime = (timestamp) => {
           </div>
         </div>
       </div>
-      <div className="w-3/4 border p-2 flex flex-col bg-white rounded-xl">
+
+      <div className="w-3/4 border p-2 flex flex-col bg-white rounded-xl max-h-[650px] border-black">
+        {selectedConversation && (
+          <div className="border p-2 bg-gray-200 rounded-md border-black">
+            {conversations.map((conversation) => (
+                <div
+                  key={conversation._id}
+                  className="flex items-center space-x-4"
+                >
+                  {selectedConversation === conversation._id &&(
+                    conversation.participants.filter(p => p._id !== currentUser.userId).map((p) => (
+                      <>
+                      <span className="ml-2 font-bold mr-auto">{p.firstName} {p.lastName}</span>
+                      <Phone size={15}/>
+                      <Video size={15}/>
+                      <EllipsisVertical size={15}/>
+                      </>
+                    ))
+                  )}
+                  
+                </div>
+              ))}
+          </div>
+        )}
+        
         {selectedConversation ? (
           <>
             <div className="flex-1 mb-4">
-              <div ref={containerRef} className="flex flex-col messages max-h-[610px] overflow-auto">
+              <div ref={containerRef} className="flex flex-col messages max-h-[500px] overflow-auto">
                 {messages.map((msg) => (
                   <div 
                   key={msg._id} 
@@ -227,7 +252,7 @@ const formatTime = (timestamp) => {
                   {msg.sender._id === currentUser.userId ? (
                     <>
                     <div className="flex flex-col">
-                        <div className={`p-1 rounded-md max-w-xs bg-gray-200 border border-black`}>                      
+                        <div className={`p-1 rounded-md max-w-xs bg-blue-300 border border-black`}>                      
                           &nbsp;&nbsp;{msg.message}&nbsp;
                         </div>
                         <span className="text-xs text-gray-500 mr-1 flex justify-end">{formatTime(msg.createdAt)}</span>
@@ -284,21 +309,21 @@ const formatTime = (timestamp) => {
                 type="text"
                 value={messageInput}
                 onChange={(e) => setMessageInput(e.target.value)}
-                className="flex-1 border rounded-l-xl p-1"
+                className="flex-1 border rounded-l-lg p-1 bg-gray-200"
                 placeholder=" Type a message..."
-                            />
-                            <button type="submit" className="bg-blue-500 text-white rounded-r-xl px-4 py-2">
-                                Send
-                            </button>
-                        </form>
-                    </>
-                ) : (
-                    <div className="flex items-center justify-center h-full text-gray-500">
-                        Select a conversation to start messaging
-                    </div>
-                )}
+              />
+                <button type="submit" className="bg-blue-500 text-white rounded-r-lg px-4 py-2">
+                    <Send size={15}/>
+                </button>
+            </form>
+          </>
+          ) : (
+            <div className="flex items-center justify-center h-full text-gray-500">
+                Select a conversation to start messaging
             </div>
+          )}
         </div>
+      </div>
     );
 }
 
