@@ -20,7 +20,7 @@ export async function GET(req, res) {
     const userId = session.user.userId; // Adjust according to your session structure
     const conversations = await Conversation.find({
       participants: userId
-    }).populate('participants', '_id firstName lastName') // Populate participant details if needed
+    }).populate('participants', '_id firstName lastName profileImage') // Populate participant details if needed
     //   .populate('lastMessage'); // Optionally populate last message
 
     // Return the conversations as JSON

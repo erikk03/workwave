@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import {Avatar} from "@nextui-org/react";
 
 const Communication = ({ session }) => {
   const [currentUser, setCurrentUser] = useState(session?.user);
@@ -11,8 +12,24 @@ const Communication = ({ session }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [polling, setPolling] = useState(false); // Polling state
-
   const pollingTimeoutRef = useRef(null); // Reference to store polling timeout ID
+  const messagesEndRef = useRef(null);
+  const containerRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return; // Exit if the containerRef is not attached yet
+
+    const isUserNearBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 100;
+
+    if (isUserNearBottom) {
+      scrollToBottom();
+    }
+  }, [messages]);
 
   useEffect(() => {
     fetchConversations();
@@ -144,6 +161,11 @@ const Communication = ({ session }) => {
     }
 };
 
+const formatTime = (timestamp) => {
+  const date = new Date(timestamp);
+  return date.toLocaleString(); // You can customize this format as needed
+};
+
   return (
     <div className="flex h-screen p-4 space-x-4">
       <div className="w-1/4 space-y-4">
@@ -177,14 +199,14 @@ const Communication = ({ session }) => {
         <div className="border p-2 bg-white rounded-xl">
           <h3 className="font-bold">Recent Chats</h3>
           <div className="flex-1 border-t rounded-md p-1 max-h-[430px] overflow-y-auto">
-            <div className="flex-1 overflow-auto">
+            <div className="flex-1 space-y-2 overflow-auto">
               {conversations.map((conversation) => (
                 <div
                   key={conversation._id}
                   onClick={() => fetchMessages(conversation._id)}
-                  className="p-4 rounded-md cursor-pointer hover:bg-gray-300"
+                  className={`p-4 rounded-md cursor-pointer hover:bg-gray-300 ${selectedConversation === conversation._id && 'bg-gray-300'}`}
                 >
-                  {conversation.participants.map((p) => `${p.firstName} ${p.lastName}`).join(", ")}
+                  {conversation.participants.filter(p => p._id !== currentUser.userId).map((p) => `${p.firstName} ${p.lastName}`)}
                 </div>
               ))}
             </div>
@@ -194,13 +216,67 @@ const Communication = ({ session }) => {
       <div className="w-3/4 border p-2 flex flex-col bg-white rounded-xl">
         {selectedConversation ? (
           <>
-            <div className="flex-1 overflow-auto mb-4">
-              <div className="messages">
+            <div className="flex-1 mb-4">
+              <div ref={containerRef} className="flex flex-col messages max-h-[610px] overflow-auto">
                 {messages.map((msg) => (
-                  <div key={msg._id} className="p-2 mb-2 bg-gray-200 rounded">
-                    <b>{msg.sender.firstName}:</b> {msg.message}
-                  </div>
+                  <div 
+                  key={msg._id} 
+                  className={`p-2 mb-2 space-x-2 flex max-w-xs ${msg.sender._id === currentUser.userId ? 'items-baseline' : 'items-center'}`}
+                  style={{ alignSelf: msg.sender._id === currentUser.userId ? 'flex-end' : 'flex-start' }}
+                  >
+                  {msg.sender._id === currentUser.userId ? (
+                    <>
+                    <div className="flex flex-col">
+                        <div className={`p-1 rounded-md max-w-xs bg-gray-200 border border-black`}>                      
+                          &nbsp;&nbsp;{msg.message}&nbsp;
+                        </div>
+                        <span className="text-xs text-gray-500 mr-1 flex justify-end">{formatTime(msg.createdAt)}</span>
+                      </div>
+                    <div>
+                      {msg.sender.userImage ? (
+                        <Avatar
+                          size="sm"
+                          radius="full"
+                          src={msg.sender.userImage}
+                        />
+                      ) : (
+                        <Avatar
+                          size="sm"
+                          radius="full"
+                          name={msg.sender.firstName.charAt(0) + msg.sender.lastName.charAt(0)}
+                        />
+                      )}
+                    </div>
+                    </>
+                  ) : (
+                    <>
+                    <div>
+                      {msg.sender.userImage ? (
+                        <Avatar
+                          size="sm"
+                          radius="full"
+                          src={msg.sender.userImage}
+                        />
+                      ) : (
+                        <Avatar
+                          size="sm"
+                          radius="full"
+                          name={msg.sender.firstName.charAt(0) + msg.sender.lastName.charAt(0)}
+                        />
+                      )}
+                      </div>
+                      <div className="flex flex-col">
+                          <span className="text-sm font-bold ml-1">{msg.sender.firstName}</span>
+                        <div className={`p-1 rounded-md max-w-xs bg-gray-200 border border-black`}>                      
+                          &nbsp;&nbsp;{msg.message}&nbsp;
+                        </div>
+                        <span className="text-xs text-gray-500 ml-1">{formatTime(msg.createdAt)}</span>
+                      </div>
+                    </>
+                  )}
+                </div>
                 ))}
+                <div ref={messagesEndRef} />
               </div>
             </div>
             <form onSubmit={sendMessage} className="message-input flex">

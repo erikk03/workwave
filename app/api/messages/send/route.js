@@ -3,6 +3,7 @@ import Message from '@/models/message';
 import Conversation from '@/models/conversation';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import User from '@/models/user';
 
 export async function POST(req) {
     try {
@@ -27,10 +28,25 @@ export async function POST(req) {
             });
         }
 
+        const senderDB = {
+            _id: senderId,
+            firstName: session.user.firstName,
+            lastName: session.user.lastName,
+            userImage: session.user.profileImage || "",
+        };
+
+        const recipientTemp = await User.findById(recipient);
+        const recipientDB = {
+            _id: recipient,
+            firstName: recipientTemp.firstName,
+            lastName: recipientTemp.lastName,
+            userImage: recipientTemp.profileImage || "",
+        };
+
         // Create a new message
         const newMessage = new Message({
-            sender: senderId,
-            recipient,
+            sender: senderDB,
+            recipient: recipientDB,
             conversationId,
             message,
             createdAt: new Date()
@@ -46,6 +62,7 @@ export async function POST(req) {
 
         // Populate the sender information
         await newMessage.populate('sender', '_id firstName lastName profileImage');
+        await newMessage.populate('recipient', '_id firstName lastName profileImage');
 
         return new Response(JSON.stringify(newMessage), {
             status: 201,
