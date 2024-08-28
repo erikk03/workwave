@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import PostForm from "@/components/PostForm";
 import PostFeed from "@/components/PostFeed";
+import SomeUserInfo from "@/components/SomeUserInfo";
 import Connections from "@/components/Connections";
 import Post from "@/models/post";
 
@@ -29,7 +30,12 @@ export default async function Feed() {
       </header>
 
       <div className="grid grid-cols-8 mt-5 sm:px-5 flex-grow">
-        <section className="hidden md:inline md:col-span-2">
+
+        <section className="hidden md:inline md:col-span-2 space-y-4">
+          <div className="p-2 bg-white rounded-xl border">
+            <SomeUserInfo />
+          </div>
+
           <div className="p-2 bg-white rounded-xl border">
             <strong className="flex justify-center p-2" style={{ fontSize: "1.2rem" }}>My connections</strong>
             <hr className="mb-2"/>

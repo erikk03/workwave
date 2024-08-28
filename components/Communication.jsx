@@ -13,6 +13,7 @@ const Communication = ({ session }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [polling, setPolling] = useState(false); // Polling state
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
   const pollingTimeoutRef = useRef(null); // Reference to store polling timeout ID
   const messagesEndRef = useRef(null);
   const containerRef = useRef(null);
@@ -27,7 +28,12 @@ const Communication = ({ session }) => {
 
     const isUserNearBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 100;
 
-    if (isUserNearBottom) {
+    if (isFirstLoad) {
+      // On the first load, always scroll to the bottom
+      scrollToBottom();
+      setIsFirstLoad(false); // Set first load to false after initial scroll
+    } else if (isUserNearBottom) {
+      // Scroll to bottom if user is near the bottom
       scrollToBottom();
     }
   }, [messages]);
@@ -89,6 +95,7 @@ const Communication = ({ session }) => {
   };
 
   const fetchMessages = async (conversationId) => {
+    setIsFirstLoad(true);
     setSelectedConversation(conversationId);
     if (pollingTimeoutRef.current) clearTimeout(pollingTimeoutRef.current); // Clear previous polling
     pollMessages(); // Start polling for the selected conversation

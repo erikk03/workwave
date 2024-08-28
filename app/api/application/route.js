@@ -6,7 +6,6 @@ import { NextResponse } from 'next/server';
 export async function POST(req) {
     try {
         const { listingId, applicantId } = await req.json();
-        console.log("Received data:", { listingId, applicantId });
 
         const user = await User.findById(applicantId);
         if (!user) return new NextResponse("User not found", { status: 404 });
@@ -37,7 +36,7 @@ export async function POST(req) {
         await application.save();
 
         // Add the application to the listing's applicants
-        listing.applicants.push(application._id);
+        listing.applicants.push(applicantId);
         await listing.save();
 
         return NextResponse.json(application, { status: 201 });
