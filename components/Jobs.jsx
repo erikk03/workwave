@@ -247,7 +247,7 @@ export default function Jobs() {
                 </ModalContent>
             </Modal>
 
-            {ads.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map(ad => (
+            {ads.map(ad => (
                 <div key={ad._id} className={`mt-5 bg-white rounded-xl p-3 ${!ad.isActive ? 'opacity-50' : ''}`}>
                     <h2 className="flex justify-center font-bold">{ad.title}</h2>
                     <p className="flex justify-center">{ad.description}</p>
