@@ -7,7 +7,7 @@ const WelcomePage = () => {
   return (
     <div className={styles.container}>
       <div className={styles.backgroundGraphic}></div>
-      <h1 className={styles.header}>WorkWave</h1>
+      {/* <h1 className={styles.header}>WorkWave</h1> */}
       <div className={styles.blocksContainer}>
         <Link href="/signin">
           <div className={styles.link}>
