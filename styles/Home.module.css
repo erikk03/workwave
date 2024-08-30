@@ -5,7 +5,7 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background: linear-gradient(135deg, #000000 0%, #0000ba 100%);
+    background: linear-gradient(135deg, #000000 0%, #030359 100%);
     font-family: 'Zain', sans-serif;
   }
   
@@ -16,15 +16,17 @@
     top: 0;
     left: 0;
     z-index: 0;
-    background: url('/wave.svg') no-repeat center center;
+    background: url('/workwave_background_clear.png') no-repeat center center;
     background-size: cover;
+    
   }
   
   .header {
-    font-size: 3.0em;
+    font-size: 4.0em;
     color: #ffffff;
     margin-bottom: 100px;
-    text-shadow: #000000 5px 2px 10px;
+    z-index: 1;
+    text-shadow: #000000 6px 4px 2px;
   }
   
   .blocksContainer {
@@ -42,14 +44,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius:10px;
-    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.137);
+    border-radius:5px;
+    /* box-shadow: 0 4px 8px rgba(255, 255, 255, 0.137); */
     transition: transform 0.3s, box-shadow 0.3s;
   }
-  
+
   .block:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.199);
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.199); */
   }
   
   .blockHeader {

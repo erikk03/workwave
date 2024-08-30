@@ -40,7 +40,7 @@ export default function Connections() {
                 friends.map(friend => (
                     <div
                         key={friend._id}
-                        className="ml-1 mr-1 flex items-center mb-2 cursor-pointer bg-gray-100 p-1 rounded-xl hover:bg-gray-200 transition border max-h-[500px] overflow-y-auto"
+                        className="p-1 mb-2 flex items-center cursor-pointer bg-gray-100 rounded-xl hover:bg-gray-200 transition border max-h-[500px] overflow-y-auto"
                         onClick={() => goToUserProfile(friend._id)}
                     >
                         {friend.profileImage ? (
@@ -59,13 +59,13 @@ export default function Connections() {
                             />
                         )}
             
-                        <div className="ml-4">
-                            <h2 className="text-lg font-medium">
+                        <div className="ml-4 flex flex-col">
+                            <span className="text-lg font-semibold">
                                 {friend.firstName} {friend.lastName}
-                            </h2>
-                            <h2 className="text-sm">
-                                {friend.position} at {friend.industry}
-                            </h2>
+                            </span>
+                            <span className="text-sm text-gray-600">
+                                {friend.position} {friend.industry}
+                            </span>
                         </div>
                     </div>
                 ))

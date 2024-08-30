@@ -127,7 +127,7 @@ export default function notifications() {
                         {notifications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((notification) => (
                             <div
                                 key={notification._id}
-                                className="mt-2 rounded-md hover:bg-gray-200"
+                                className="mt-2 rounded-md cursor-pointer hover:bg-gray-200 "
                                 onClick={() => popUpPost(notification.postId)}
                             >
                                 {notification.type === "like" && (

@@ -85,7 +85,7 @@ function Post({ post }) {
         const checkLikedByFriend = () => {
             if (userFriendsId.length === 0 || post.likes.length === 0) return;
 
-            // check if at least one of the post likes is a friend
+            // Check if at least one like was made by a friend
             const likedBy = post.likes.some(like => userFriendsId.includes(like));
             setLikedByFriend(likedBy);
 

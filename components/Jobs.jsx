@@ -80,7 +80,7 @@ export default function Jobs() {
             });
             if (!response.ok) throw new Error("Failed to apply");
 
-            // // After applying, send a notification to the owner of the listing
+            // After applying, send a notification to the owner of the listing
             // const listing = ads.find(ad => ad._id === adId);
             // await fetch('/api/notifications/job_app', {
             //     method: "POST",
@@ -283,10 +283,10 @@ export default function Jobs() {
             {viewingApplications && (
                 <Modal isOpen={viewingApplications} onOpenChange={closeApplicationsView} backdrop="blur" placement="center">
                     <ModalContent>
-                        <ModalHeader>Applications for Listing with Id: {selectedListingId}</ModalHeader>
+                        <ModalHeader>Applications Job Adv. with Id: {selectedListingId}</ModalHeader>
                         <ModalBody>
                             {applications.length === 0 ? (
-                                <p>No applications for this listing.</p>
+                                <p>No applications for this job.</p>
                             ) : (
                                 <ul>
                                     {applications.map(app => (
