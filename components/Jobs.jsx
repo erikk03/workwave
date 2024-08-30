@@ -80,22 +80,22 @@ export default function Jobs() {
             });
             if (!response.ok) throw new Error("Failed to apply");
 
-            // After applying, send a notification to the owner of the listing
-            const listing = ads.find(ad => ad._id === adId);
-            await fetch('/api/notifications/job_app', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    type: "application",
-                    userId: listing.postedById, // Recipient of the notification
-                    userFirstName: session.user.firstName,
-                    userLastName: session.user.lastName,
-                    postId: "",
-                    comment: `Someone applied to your listing with title: ${listing.title}`
-                }),
-            });
+            // // After applying, send a notification to the owner of the listing
+            // const listing = ads.find(ad => ad._id === adId);
+            // await fetch('/api/notifications/job_app', {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json",
+            //     },
+            //     body: JSON.stringify({
+            //         type: "application",
+            //         userId: listing.postedById, // Recipient of the notification
+            //         userFirstName: session.user.firstName,
+            //         userLastName: session.user.lastName,
+            //         postId: "",
+            //         comment: `Someone applied to your listing with title: ${listing.title}`
+            //     }),
+            // });
 
             alert("Application submitted!");
             setAppliedListings(prev => ({ ...prev, [adId]: true }));

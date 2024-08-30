@@ -1,21 +1,21 @@
 "use client";
 
+import {useRef, useEffect, useState} from "react";
 import { useSession } from "next-auth/react";
 import { Avatar } from "@nextui-org/avatar";
-import { Badge } from "@nextui-org/badge";
+// import { Badge } from "@nextui-org/badge";
 import { Button } from "@nextui-org/button";
 import { Trash2, DiamondPlus } from "lucide-react";
 import ReactTimeago from "react-timeago";
 import Image from "next/image"
 import deletePostAction from "@/actions/deletePostAction";
 import PostOptions from "./PostOptions";
-import { useEffect, useState } from "react";
 // import { toast } from "sonner";
 
 
 function Post({ post }) {
     const { data: session, status } = useSession();
-    const user = session?.user;
+    const user = session?.user; 
 
     const [userFriendsId, setUserFriendsId] = useState([]);
     const [likedByFriend, setLikedByFriend] = useState(false);
@@ -23,11 +23,49 @@ function Post({ post }) {
 
     const isAuthor = user?.userId === post.user.userId;
 
+    const postRef = useRef();
+    useEffect(() => {
+        // Function to log view
+        const logView = async () => {
+            if (!user?.userId) return;
+
+            try {
+                await fetch(`/api/posts/${post._id}/view`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: user.userId }),
+                });
+            } catch (error) {
+                console.error("Error logging view:", error);
+            }
+        };
+        // Create an Intersection Observer to track post visibility
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting) {
+                    logView(); // Log view when the post enters the viewport
+                }
+            },
+            { threshold: 0.5 } // 50% of the post is visible to consider it "viewed"
+        );
+
+        if (postRef.current) {
+            observer.observe(postRef.current);
+        }
+
+        // Cleanup observer on component unmount
+        return () => {
+            if (postRef.current) {
+                observer.unobserve(postRef.current);
+            }
+        };
+    }, [user, post._id]);
+
     useEffect(() => {
         // Fetch the user's friends list from the backend or any relevant source
         const fetchUserFriends = async () => {
             if (!user?.userId) return;
-
+            
             try {
                 // Replace this with your actual API call to fetch friends' IDs
                 const response = await fetch(`/api/friends/list`);
@@ -47,6 +85,7 @@ function Post({ post }) {
         const checkLikedByFriend = () => {
             if (userFriendsId.length === 0 || post.likes.length === 0) return;
 
+            // check if at least one of the post likes is a friend
             const likedBy = post.likes.some(like => userFriendsId.includes(like));
             setLikedByFriend(likedBy);
 
@@ -62,7 +101,7 @@ function Post({ post }) {
     const showLikedByFriendLabel = likedByFriend && !isFriend && !isAuthor;
 
     return (
-    <div className="bg-white rounded-xl border mt-2">
+    <div ref={postRef} className="bg-white rounded-xl border mt-2">
         <div className="ml-0 p-4 flex space-x-2">
             <div>
                 {post?.user?.userImage ? (

@@ -2,6 +2,7 @@ import { connectMongoDB } from "@/lib/mongodb";
 import Post from "@/models/post";
 import User from "@/models/user";
 import { NextResponse } from "next/server";
+import PostInteraction from "@/models/postInteraction";
 
 export async function GET(request, { params }) {
     await connectMongoDB();
@@ -52,6 +53,13 @@ export async function POST(request, { params }) {
         }
 
         await post.addLikeNotification(notification);
+
+
+        await PostInteraction.findOneAndUpdate(
+            { userId: userId, postId: post._id.toString() },
+            { $inc: { interaction: 3 }}, 
+            { upsert: true }
+        );
 
         await post.save();
         return NextResponse.json({ message: "Post liked successfully" });

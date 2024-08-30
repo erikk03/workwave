@@ -3,6 +3,7 @@
 import Post from "@/models/post";
 import { revalidatePath } from "next/cache";
 import Notification from "@/models/notification";
+import PostInteraction from "@/models/postInteraction";
 
 export default async function createCommentAction(postId, formData, session) {
     const user = session?.user;
@@ -53,6 +54,12 @@ export default async function createCommentAction(postId, formData, session) {
       
         await post.addCommentNotification(notification);
         
+        await PostInteraction.findOneAndUpdate(
+            { userId: user.userId, postId: postId },
+            { $inc: { interaction: 2 }  }, 
+            { upsert: true }
+        );
+
         await post.save();
         revalidatePath('/');
     } catch (error) {

@@ -19,6 +19,12 @@ const PostSchema = new Schema(
         comments: { type: [Schema.Types.ObjectId], ref: "Comment", default: [] },
         likes: { type: [String] },
         notifications: { type: [Schema.Types.ObjectId], ref: "Notification", default: [] },
+        views: [
+            {
+                userId: { type: String, required: true },
+                timestamp: { type: Date, default: Date.now },
+            },
+        ],
     },
     {
         timestamps: true,
