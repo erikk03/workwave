@@ -3,7 +3,6 @@
 import {useRef, useEffect, useState} from "react";
 import { useSession } from "next-auth/react";
 import { Avatar } from "@nextui-org/avatar";
-// import { Badge } from "@nextui-org/badge";
 import { Button } from "@nextui-org/button";
 import { Trash2, DiamondPlus } from "lucide-react";
 import ReactTimeago from "react-timeago";
@@ -99,6 +98,9 @@ function Post({ post }) {
 
     // Condition to show "Liked by a friend" label
     const showLikedByFriendLabel = likedByFriend && !isFriend && !isAuthor;
+    
+    // Condition to show "recommended" label
+    // const showRecommendedLabel = !likedByFriend && !isFriend && !isAuthor;
 
     return (
     <div ref={postRef} className="bg-white rounded-xl border mt-2">
@@ -141,10 +143,16 @@ function Post({ post }) {
                 </div>
 
                 { showLikedByFriendLabel && (
-                    <div className="font-semibold border rounded-md border-black flex items-center max-h-7 p-2">
-                        <DiamondPlus size={15} className="mr-1"/> recommended
+                    <div className="font-light border rounded-md border-gray-200 bg-gray-200 flex items-center max-h-7 p-2">
+                        <DiamondPlus size={15} className="mr-1"/> liked by friend
                     </div>
                 )}
+
+                {/* { showRecommendedLabel && (
+                    <div className="font-light border rounded-md border-gray-200 bg-gray-200 flex items-center max-h-7 p-2">
+                        <DiamondPlus size={15} className="mr-1"/> recommended
+                    </div>
+                )} */}
                 
                 {isAuthor && (
                     <Button
