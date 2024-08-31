@@ -112,10 +112,10 @@ async function PostFeed({posts}) {
         recPost => !filteredPosts.some(filteredPost => filteredPost._id.toString() === recPost._id.toString())
     );
 
-    // const loadMorePosts = () => {
-    //     setDaysRange(daysRange + 3);
-    //     router.push(`/feed?days=${daysRange + 3}`);
-    // }
+    const loadMorePosts = () => {
+        // setDaysRange(daysRange + 3);
+        // router.push(`/feed?days=${daysRange + 3}`);
+    }
 
 
     return(
@@ -124,7 +124,8 @@ async function PostFeed({posts}) {
                 <PostComponent key={post._id} post={post} />
             ))}
 
-            <span className="flex justify-center text-gray-600">no more posts to view</span>
+            <span className="flex justify-center text-gray-600">no more posts from past 3 days</span>
+            <span onClick={loadMorePosts()} className="flex justify-center text-blue-600 cursor-pointer hover:underline">load more posts</span>
             
             <hr className="border-black"/>
             <span className="flex justify-center text-gray-600">recommended posts</span>

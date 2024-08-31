@@ -1,18 +1,22 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Avatar, Button } from '@nextui-org/react';
 import { redirect } from 'next/navigation';
 import { useSession } from "next-auth/react";
 import { Download, Pencil, Send } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
+import Communication from './Communication';
+
 
 export default function UserProfile({ userId, initialUser }) {
 	const [profileUser, setUser] = useState(initialUser);
 	const [isEditing, setIsEditing] = useState(false);
+	const [conversations, setConversations] = useState([]);
+	const [openConversation, setOpenConversation] = useState(false);
+	const [convId, setConvId] = useState(null);
 	const { data: session, status } = useSession();
-	const router = useRouter();
-
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
 	const handleEditClick = () => setIsEditing(true);
 
 	const sessionUser = session?.user;
@@ -22,6 +26,41 @@ export default function UserProfile({ userId, initialUser }) {
 	const getFieldVisibility = (field) => {
 		return isProfileOwner || profileUser.visibilitySettings[field];
 	};
+
+	useEffect(() => {
+		fetchConversations();
+	}, []);
+
+	const fetchConversations = async () => {
+		try {
+		  const response = await fetch("/api/conversations");
+		  if (!response.ok) throw new Error("Failed to fetch conversations");
+		  const data = await response.json();
+		  setConversations(data);
+		} catch (error) {
+		  console.error("Error fetching conversations:", error);
+		}
+	};
+
+	const popUpConversation = async () => {
+        try {
+	
+			// Find the conversation with the matching participants
+			const conversation = conversations.find(conv => 
+				conv.participants.some(participant => participant._id === profileUser._id)
+			);
+
+			if (conversation) {
+				setConvId(conversation._id.toString());
+				setOpenConversation(true);
+				onOpen();
+			} else {
+				console.log("No matching conversation found.");
+			}
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
 
   	return (
     <div className="col-span-full md:col-span-6 md:max-w-2xl xl:col-span-4 xl:max-w-5xl sm:max-w-md mx-auto w-full">
@@ -37,7 +76,7 @@ export default function UserProfile({ userId, initialUser }) {
 
 			  <div className='mt-2 mr-2 flex flex-col items-end'> {/* Change to absolute positioning */}
 				{!isProfileOwner && (
-					<Button onClick={() => router.push('/communication')}
+					<Button onClick={() => popUpConversation()}
 					color="default" 
 					variant="light" 
 					size="sm">
@@ -173,6 +212,21 @@ export default function UserProfile({ userId, initialUser }) {
 					</div>
 				</div>
 			</div>
+		)}
+
+		{/* Modal for displaying a post */}
+		{openConversation && (
+			<Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop="opaque" placement="center" size="full">
+				<ModalContent>
+					<ModalHeader></ModalHeader>
+					<ModalBody>
+						<div>
+							<Communication session={session} convId={convId}/>
+						</div>
+					</ModalBody>
+					<ModalFooter></ModalFooter>
+				</ModalContent>
+			</Modal>
 		)}
     </div>
   );

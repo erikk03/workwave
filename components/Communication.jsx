@@ -3,10 +3,10 @@ import { useState, useEffect, useRef } from "react";
 import {Avatar} from "@nextui-org/react";
 import {Send, Phone, Video, EllipsisVertical} from 'lucide-react'
 
-const Communication = ({ session }) => {
+const Communication = ({ session, convId }) => {
   const [currentUser, setCurrentUser] = useState(session?.user);
   const [conversations, setConversations] = useState([]);
-  const [selectedConversation, setSelectedConversation] = useState(null);
+  const [selectedConversation, setSelectedConversation] = useState(convId || null);
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
   const [users, setUsers] = useState([]);
@@ -26,7 +26,7 @@ const Communication = ({ session }) => {
     const container = containerRef.current;
     if (!container) return; // Exit if the containerRef is not attached yet
 
-    const isUserNearBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 100;
+    const isUserNearBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 200;
 
     if (isFirstLoad) {
       // On the first load, always scroll to the bottom
@@ -54,11 +54,17 @@ const Communication = ({ session }) => {
   }, [searchQuery, users]);
 
   useEffect(() => {
-    if (selectedConversation && !polling) {
-      pollMessages(); // Start polling when a conversation is selected
+    if (selectedConversation) {
+      // Ensure the polling stops if there's already a timeout
+      if (pollingTimeoutRef.current) {
+        clearTimeout(pollingTimeoutRef.current);
+      }
+      pollMessages(); // Start polling immediately when a conversation is selected
     }
     return () => {
-      if (pollingTimeoutRef.current) clearTimeout(pollingTimeoutRef.current); // Cleanup polling on unmount
+      if (pollingTimeoutRef.current) {
+        clearTimeout(pollingTimeoutRef.current); // Cleanup polling on unmount or on conversation change
+      }
     };
   }, [selectedConversation]);
 
@@ -97,8 +103,6 @@ const Communication = ({ session }) => {
   const fetchMessages = async (conversationId) => {
     setIsFirstLoad(true);
     setSelectedConversation(conversationId);
-    if (pollingTimeoutRef.current) clearTimeout(pollingTimeoutRef.current); // Clear previous polling
-    pollMessages(); // Start polling for the selected conversation
   };
 
   const fetchUsers = async () => {
@@ -117,7 +121,7 @@ const Communication = ({ session }) => {
     if (conversation) {
       const participants = conversation.participants;
       const senderId = currentUser.userId;
-      return participants.find((id) => id.toString() !== senderId);//.toString();
+      return participants.find((id) => id.toString() !== senderId);
     }
     return null;
   };
@@ -125,12 +129,6 @@ const Communication = ({ session }) => {
   const sendMessage = async (e) => {
     e.preventDefault();
     if (messageInput.trim() === "") return;
-
-    console.log("Sending message:", {
-        conversationId: selectedConversation,
-        message: messageInput,
-        recipient: getRecipientIdFromConversation(selectedConversation),
-    });
 
     try {
         const recipientId = getRecipientIdFromConversation(selectedConversation);
@@ -162,8 +160,16 @@ const Communication = ({ session }) => {
         });
         if (!response.ok) throw new Error('Failed to start conversation');
         const newConversation = await response.json();
-        setConversations(prevConversations => [...prevConversations, newConversation]);
-        fetchMessages(newConversation._id, userId);
+
+        // Check if the newConversation already exists in the conversations array
+        const exists = conversations.some(conv => conv._id === newConversation._id);
+
+        if(!exists){
+          setConversations(prevConversations => [...prevConversations, newConversation]);
+          fetchMessages(newConversation._id, userId);
+        }else{
+          setSelectedConversation(newConversation._id);
+        }
     } catch (error) {
         console.error('Error starting conversation:', error);
     }
