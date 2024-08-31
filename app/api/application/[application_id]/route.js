@@ -71,6 +71,14 @@ export async function PATCH(req, { params }) {
       }
     }
 
+    if (listing) {
+      if (status === "Denied") {
+        // Mark the listing as accepted and inactive and include in acceptedUsers the applicants id
+        await Application.findByIdAndDelete(application_id);
+        await listing.save();
+      }
+    }
+
     return NextResponse.json({ message: "Application status updated" });
   } catch (error) {
     console.error("Error updating application status:", error);
