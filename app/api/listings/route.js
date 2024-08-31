@@ -168,6 +168,80 @@ async function calculateRecommendationsForUser(userId, numFactors = 2) {
 }
 
 
+// export async function GET(request) {
+//     try {
+//         // Get the user session
+//         const session = await getServerSession(authOptions);
+//         if (!session || !session.user?.userId) {
+//             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+//         }
+
+//         // Connect to the MongoDB database
+//         await connectMongoDB();
+
+//         // Find the user to get their skills
+//         const user = await User.findById(session.user.userId).lean();
+//         let userSkillsArray = [];
+//         let matchingListings = [];
+//         let otherListings = [];
+
+//         if (user && user.skills) {
+//             userSkillsArray = user.skills.split(',').map(skill => skill.trim()); // Assuming skills are comma-separated
+
+//             // Query for listings that match user skills
+//             matchingListings = await Listing.find({
+//                 skillsRequired: { $in: userSkillsArray }
+//             })
+//             .populate({
+//                 path: 'applicants',
+//                 select: 'applicantId',
+//             })
+//             .sort({ createdAt: -1 })
+//             .lean();
+
+//             // Query for all other listings not matching user skills
+//             otherListings = await Listing.find({
+//                 skillsRequired: { $nin: userSkillsArray }
+//             })
+//             .populate({
+//                 path: 'applicants',
+//                 select: 'applicantId',
+//             })
+//             .sort({ createdAt: -1 })
+//             .lean();
+//         } else {
+//             // If no user skills are found, treat all listings as "other listings"
+//             otherListings = await Listing.find().sort({ createdAt: -1 }).lean();
+//         }
+
+//         // Calculate recommendations using Matrix Factorization for the current user
+//         const recommendations = await calculateRecommendationsForUser(session.user.userId);
+
+//         // Filter out listings from `otherListings` that are already included in `matchingListings`
+//         const filteredOtherListings = otherListings.filter(listing => 
+//             !matchingListings.some(match => match._id.toString() === listing._id.toString())
+//         );
+
+//         // // Merge matrix factorization results with the other listings
+//         const recommendedListingsByScore = recommendations.map(rec => 
+//             filteredOtherListings.find(listing => listing._id.toString() === rec.listingId.toString())
+//         ).filter(Boolean);
+
+//         // Combine the listings: skill-matching, matrix factorization, then other by recency
+//         const finalListings = [
+//             ...matchingListings,
+//             ...recommendedListingsByScore,
+//             // ...filteredOtherListings
+//         ];
+
+//         return NextResponse.json(finalListings);
+//     } catch (error) {
+//         console.error("Error fetching listings:", error);
+//         return new NextResponse("Internal server error", { status: 500 });
+//     }
+// }
+
+
 export async function GET(request) {
     try {
         // Get the user session
@@ -184,13 +258,29 @@ export async function GET(request) {
         let userSkillsArray = [];
         let matchingListings = [];
         let otherListings = [];
+        let userOwnListings = [];
+        let inactiveListings = [];
+
+        // Query for listings made by the user
+        userOwnListings = await Listing.find({
+            postedById: session.user.userId,
+            // isActive: true // Only active listings
+        })
+        .populate({
+            path: 'applicants',
+            select: 'applicantId',
+        })
+        .sort({ createdAt: -1 })
+        .lean();
 
         if (user && user.skills) {
             userSkillsArray = user.skills.split(',').map(skill => skill.trim()); // Assuming skills are comma-separated
 
             // Query for listings that match user skills
             matchingListings = await Listing.find({
-                skillsRequired: { $in: userSkillsArray }
+                skillsRequired: { $in: userSkillsArray },
+                postedById: { $ne: session.user.userId }, // Exclude listings made by the user
+                isActive: true // Only active listings
             })
             .populate({
                 path: 'applicants',
@@ -201,7 +291,9 @@ export async function GET(request) {
 
             // Query for all other listings not matching user skills
             otherListings = await Listing.find({
-                skillsRequired: { $nin: userSkillsArray }
+                skillsRequired: { $nin: userSkillsArray },
+                postedById: { $ne: session.user.userId }, // Exclude listings made by the user
+                isActive: true // Only active listings
             })
             .populate({
                 path: 'applicants',
@@ -211,8 +303,23 @@ export async function GET(request) {
             .lean();
         } else {
             // If no user skills are found, treat all listings as "other listings"
-            otherListings = await Listing.find().sort({ createdAt: -1 }).lean();
+            otherListings = await Listing.find({
+                postedById: { $ne: session.user.userId }, // Exclude listings made by the user
+                isActive: true // Only active listings
+            }).sort({ createdAt: -1 }).lean();
         }
+
+        // Query for inactive listings 
+            inactiveListings = await Listing.find({
+            postedById: { $ne: session.user.userId }, // Exclude listings made by the session user
+            isActive: false // Only inactive listings
+        })
+        .populate({
+            path: 'applicants',
+            select: 'applicantId',
+        })
+        .sort({ createdAt: -1 })
+        .lean();
 
         // Calculate recommendations using Matrix Factorization for the current user
         const recommendations = await calculateRecommendationsForUser(session.user.userId);
@@ -222,16 +329,17 @@ export async function GET(request) {
             !matchingListings.some(match => match._id.toString() === listing._id.toString())
         );
 
-        // // Merge matrix factorization results with the other listings
+        // Merge matrix factorization results with the other listings
         const recommendedListingsByScore = recommendations.map(rec => 
             filteredOtherListings.find(listing => listing._id.toString() === rec.listingId.toString())
         ).filter(Boolean);
 
-        // Combine the listings: skill-matching, matrix factorization, then other by recency
+        // Combine the listings: user's own listings first, skill-matching, matrix factorization, then other by recency
         const finalListings = [
+            ...userOwnListings,
             ...matchingListings,
             ...recommendedListingsByScore,
-            // ...filteredOtherListings
+            ...inactiveListings,
         ];
 
         return NextResponse.json(finalListings);

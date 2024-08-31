@@ -164,6 +164,7 @@ export default function Jobs() {
         }
     };
 
+
     const updateApplicationStatus = async (appId, status) => {
         try {
             const response = await fetch(`/api/application/${appId}`, {
@@ -173,28 +174,34 @@ export default function Jobs() {
                 },
                 body: JSON.stringify({ status }),
             });
+    
             if (!response.ok) throw new Error("Failed to update application status");
+    
             await response.json();
-
-            // Remove applicant from the listing's applicants array
-            const ad = ads.find(ad => ad._id === selectedListingId);
-            const updatedApplicants = ad.applicants.filter(applicant => applicant.toString() !== applications.find(app => app._id === appId).applicantId.toString());
-
-            setAds(ads.map(ad => ad._id === selectedListingId ? { ...ad, applicants: updatedApplicants } : ad));
-
-            // Remove the application from the list
-            setApplications(applications.filter(app => app._id !== appId));
-
-            // If no applications are left, update the view
-            if (applications.length === 1) { // Because the application was just removed
-                setViewingApplications(false);
-                alert("No applications for this listing.");
+    
+            // If status is Denied, remove the application from the applications state
+            if (status === "Denied") {
+                const updatedApplications = applications.filter(app => app._id !== appId);
+                setApplications(updatedApplications);
+    
+                // If no applications are left after denial, close the applications view
+                if (updatedApplications.length === 0) {
+                    setViewingApplications(false);
+                    alert("No applications for this listing.");
+                }
+            } else if (status === "Accepted") {
+                // You can add specific logic here if needed when an application is accepted
+                const updatedApplications = applications.filter(app => app._id !== appId);
+                setApplications(updatedApplications);
             }
+    
+            // Optional: You can handle further actions based on status if needed
         } catch (error) {
             alert(`Error: ${error.message}`);
         }
     };
-
+    
+    
     const closeApplicationsView = () => {
         setViewingApplications(false);
         setApplications([]);
@@ -283,7 +290,7 @@ export default function Jobs() {
             {viewingApplications && (
                 <Modal isOpen={viewingApplications} onOpenChange={closeApplicationsView} backdrop="blur" placement="center">
                     <ModalContent>
-                        <ModalHeader>Applications Job Adv. with Id: {selectedListingId}</ModalHeader>
+                        <ModalHeader>Applications for Job Adv. with Id: {selectedListingId}</ModalHeader>
                         <ModalBody>
                             {applications.length === 0 ? (
                                 <p>No applications for this job.</p>
@@ -302,7 +309,6 @@ export default function Jobs() {
                                                     size="sm"
                                                     variant="ghost"
                                                     onClick={() => updateApplicationStatus(app._id, 'Accepted')}
-                                                    // disabled={acceptedApplications.has(app._id)} // Disable if already accepted
                                                 >
                                                     Accept
                                                 </Button>

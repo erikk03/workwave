@@ -5,11 +5,13 @@ import { Avatar, Button } from '@nextui-org/react';
 import { redirect } from 'next/navigation';
 import { useSession } from "next-auth/react";
 import { Download, Pencil, Send } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function UserProfile({ userId, initialUser }) {
 	const [profileUser, setUser] = useState(initialUser);
 	const [isEditing, setIsEditing] = useState(false);
 	const { data: session, status } = useSession();
+	const router = useRouter();
 
 	const handleEditClick = () => setIsEditing(true);
 
@@ -29,6 +31,18 @@ export default function UserProfile({ userId, initialUser }) {
 					<Button onClick={handleEditClick} color="default" variant="light" size="sm">
 					Edit Profile
 					<Pencil size={15}/>
+					</Button>
+				)}
+          	</div>
+
+			  <div className='mt-2 mr-2 flex flex-col items-end'> {/* Change to absolute positioning */}
+				{!isProfileOwner && (
+					<Button onClick={() => router.push('/communication')}
+					color="default" 
+					variant="light" 
+					size="sm">
+					Send A Message
+					<Send size={15}/>
 					</Button>
 				)}
           	</div>
