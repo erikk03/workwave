@@ -100,7 +100,7 @@ export default function notifications() {
                 </div>
                 <hr className="mt-2 mb-2"/>
                 {requests.length > 0 ? (
-                    <ul className="max-h-[100px] overflow-y-auto">
+                    <ul className="max-h-[120px] overflow-y-auto">
                         {requests.map((request) => (
                             <div key={request._id} className=" space-y-1 flex justify-between items-center">
                                 <span className="font-bold">{request.firstName} {request.lastName}</span>
@@ -123,7 +123,7 @@ export default function notifications() {
                 </div>
                 <hr className="mt-2 mb-2"/>
                 {notifications.length > 0 ? (
-                    <ul className="max-h-[450px] overflow-y-auto">
+                    <ul className="max-h-[420px] overflow-y-auto">
                         {notifications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((notification) => (
                             <div
                                 key={notification._id}
