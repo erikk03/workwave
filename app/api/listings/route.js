@@ -145,10 +145,7 @@ async function calculateRecommendationsForUser(userId, numFactors = 2) {
     
     // Initialize interaction-based ratings
     mf.initializeRatings(interactions, userIdToIndex, listingIdToIndex);
-    
-    // Initialize content-based features
-    mf.initializeContentFeatures(listings);
-    
+        
     // Train the model
     mf.train();
 
