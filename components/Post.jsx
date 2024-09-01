@@ -12,11 +12,11 @@ import PostOptions from "./PostOptions";
 // import { toast } from "sonner";
 
 
-function Post({ post }) {
+function Post({ post, user_friendsId}) {
     const { data: session, status } = useSession();
     const user = session?.user; 
 
-    const [userFriendsId, setUserFriendsId] = useState([]);
+    const [userFriendsId, setUserFriendsId] = useState(user_friendsId || []);
     const [likedByFriend, setLikedByFriend] = useState(false);
     const [isFriend, setIsFriend] = useState(false);
 
@@ -60,36 +60,36 @@ function Post({ post }) {
         };
     }, [user, post._id]);
 
-    useEffect(() => {
-        // Fetch the user's friends list from the backend or any relevant source
-        const fetchUserFriends = async () => {
-            if (!user?.userId) return;
+    // useEffect(() => {
+    //     // Fetch the user's friends list from the backend or any relevant source
+    //     const fetchUserFriends = async () => {
+    //         if (!user?.userId) return;
             
-            try {
-                // Replace this with your actual API call to fetch friends' IDs
-                const response = await fetch(`/api/friends/list`);
-                const friendsData = await response.json();
-                setUserFriendsId(friendsData.map(friend => friend._id)); // Assuming friendsData is an array of friend objects
+    //         try {
+    //             // Replace this with your actual API call to fetch friends' IDs
+    //             const response = await fetch(`/api/friends/list`);
+    //             const friendsData = await response.json();
+    //             setUserFriendsId(friendsData.map(friend => friend._id)); // Assuming friendsData is an array of friend objects
 
-            } catch (error) {
-                console.error("Error fetching friends list:", error);
-            }
-        };
+    //         } catch (error) {
+    //             console.error("Error fetching friends list:", error);
+    //         }
+    //     };
 
-        fetchUserFriends();
-    }, [user]);
+    //     fetchUserFriends();
+    // }, [user]);
 
     useEffect(() => {
         // Check if the post was liked by a friend
         const checkLikedByFriend = () => {
-            if (userFriendsId.length === 0 || post.likes.length === 0) return;
+            if (userFriendsId?.length === 0 || post.likes.length === 0) return;
 
             // Check if at least one like was made by a friend
-            const likedBy = post.likes.some(like => userFriendsId.includes(like));
+            const likedBy = post.likes.some(like => userFriendsId?.includes(like));
             setLikedByFriend(likedBy);
 
             // Check if post owner is a friend
-            const ownerIsFriend = userFriendsId.includes(post.user.userId);
+            const ownerIsFriend = userFriendsId?.includes(post.user.userId);
             setIsFriend(ownerIsFriend);
         };
 

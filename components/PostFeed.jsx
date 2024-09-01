@@ -96,6 +96,8 @@ async function PostFeed({searchParams}) {
         const result = postDate >= pastDate;
         return result;
     });
+
+    const plainFilteredPostsWhithinDateRange = JSON.parse(JSON.stringify(filteredPostsWhithinDateRange));
         
         
     const recommendedPostsByScore = recommendations.map(rec =>
@@ -107,18 +109,20 @@ async function PostFeed({searchParams}) {
         recPost => !filteredPosts.some(filteredPost => filteredPost._id.toString() === recPost._id.toString())
     );
 
+    const plainUniqueRecommendedPosts = JSON.parse(JSON.stringify(uniqueRecommendedPosts));
+
     return(
         <div className="space-y-5 pb-20">
-            {filteredPostsWhithinDateRange?.map((post) => (
-                <PostComponent key={post._id} post={post} />
+            {plainFilteredPostsWhithinDateRange?.map((post) => (
+                <PostComponent key={post._id} post={post} user_friendsId={user_friendsId} />
             ))}
 
             <span className="flex justify-center text-gray-600">no more posts from last {daysRange} days</span>
             <a href={`/feed?daysRange=${daysRange + 3}`} className="flex justify-center text-blue-600 cursor-pointer hover:underline">load more posts</a>
             <hr className="border-black"/>
             <span className="flex justify-center text-gray-600">recommended posts</span>
-            {uniqueRecommendedPosts?.map((post) => (
-                <PostComponent key={post._id} post={post} />
+            {plainUniqueRecommendedPosts?.map((post) => (
+                <PostComponent key={post._id} post={post} user_friendsId={user_friendsId}/>
             ))}
         </div>
     );

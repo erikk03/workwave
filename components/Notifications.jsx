@@ -155,7 +155,7 @@ export default function notifications() {
                         <ModalHeader></ModalHeader>
                         <ModalBody>
                             <div>
-                                <Post key={selectedPost._id} post={selectedPost} />
+                                <Post key={selectedPost._id} post={selectedPost}  />
                             </div>
                         </ModalBody>
                         <ModalFooter></ModalFooter>
