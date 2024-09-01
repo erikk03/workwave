@@ -61,8 +61,6 @@ async function calculateRecommendationsForUser(userId, numFactors = 2) {
 }
 
 async function PostFeed({searchParams}) {
-    // const [daysRange, setDaysRange] = useState(3);
-    // let daysRange = 3;
     const daysRange = searchParams?.daysRange ? parseInt(searchParams.daysRange, 10) : 3;
 
     const session = await getServerSession(authOptions);
