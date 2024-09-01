@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
         <link href="https://fonts.googleapis.com/css2?family=Zain&display=swap" rel="stylesheet" />
       </head>
-      <body className="bg-gray-100">
+      <body className="bg-stone-200">
         <Providers>
           {children}
         </Providers>

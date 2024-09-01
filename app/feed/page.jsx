@@ -11,13 +11,12 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 import { connectMongoDB } from "@/lib/mongodb";
 import { updateMediaUrls } from "@/lib/azureblob";
 
-export default async function Feed() {
+export default async function Feed({searchParams}) {
 
   const session = await getServerSession(authOptions);
   if (!session) redirect("/");
 
   await connectMongoDB();
-  const posts = await Post.getAllPosts();
 
   // Update media URLs
   await updateMediaUrls();
@@ -46,9 +45,7 @@ export default async function Feed() {
         <section className="col-span-full md:col-span-6 xl:col-span-4 xl:max-w-xl mx-auto w-full">
             <PostForm />
           
-          <PostFeed
-            posts={posts}
-          />
+          <PostFeed searchParams={searchParams}/>
 
         </section>
 

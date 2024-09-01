@@ -6,9 +6,6 @@ import { authOptions } from "../app/api/auth/[...nextauth]/route";
 import User from "@/models/user";
 import PostInteraction from "@/models/postInteraction";
 import { MatrixFactorization } from "@/lib/matrixPosts";
-// import { useState } from "react";
-
-
 
 async function fetchAllUsersAndPosts() {
     const users = await User.find({}, '_id').lean();  // Fetch only user IDs
@@ -19,8 +16,6 @@ async function fetchAllUsersAndPosts() {
 
     return { userIds, postIds, posts };
 }
-
-
 
 // A utility function to create mappings from user/post IDs to indices
 function createMappings(userIds, postIds) {
@@ -37,8 +32,6 @@ function createMappings(userIds, postIds) {
 
     return { userIdToIndex, postIdToIndex };
 }
-
-
 
 async function calculateRecommendationsForUser(userId, numFactors = 2) {
     const { userIds, postIds, posts } = await fetchAllUsersAndPosts();
@@ -67,9 +60,10 @@ async function calculateRecommendationsForUser(userId, numFactors = 2) {
     return postRecommendations;
 }
 
-async function PostFeed({posts}) {
+async function PostFeed({searchParams}) {
     // const [daysRange, setDaysRange] = useState(3);
-    const daysRange = 3;
+    // let daysRange = 3;
+    const daysRange = searchParams?.daysRange ? parseInt(searchParams.daysRange, 10) : 3;
 
     const session = await getServerSession(authOptions);
         if (!session || !session.user?.userId) {
@@ -82,7 +76,8 @@ async function PostFeed({posts}) {
 
     const recommendations = await calculateRecommendationsForUser(session.user.userId);
 
-    
+    const posts = await Post.getAllPosts();
+
     // Filter posts to include only those from friends, the user, admin, or liked by friends
     const filteredPosts = posts?.filter((post) => { 
         const isFriendsPost = user_friendsId.includes(post.user.userId);                    // Friends' posts
@@ -112,20 +107,14 @@ async function PostFeed({posts}) {
         recPost => !filteredPosts.some(filteredPost => filteredPost._id.toString() === recPost._id.toString())
     );
 
-    // const loadMorePosts = () => {
-    //     setDaysRange(daysRange + 3);
-    //     router.push(`/feed?days=${daysRange + 3}`);
-    // }
-
-
     return(
         <div className="space-y-5 pb-20">
             {filteredPostsWhithinDateRange?.map((post) => (
                 <PostComponent key={post._id} post={post} />
             ))}
 
-            <span className="flex justify-center text-gray-600">no more posts to view</span>
-            
+            <span className="flex justify-center text-gray-600">no more posts from last {daysRange} days</span>
+            <a href={`/feed?daysRange=${daysRange + 3}`} className="flex justify-center text-blue-600 cursor-pointer hover:underline">load more posts</a>
             <hr className="border-black"/>
             <span className="flex justify-center text-gray-600">recommended posts</span>
             {uniqueRecommendedPosts?.map((post) => (
