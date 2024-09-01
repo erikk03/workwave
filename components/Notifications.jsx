@@ -100,9 +100,9 @@ export default function notifications() {
                 </div>
                 <hr className="mt-2 mb-2"/>
                 {requests.length > 0 ? (
-                    <ul>
+                    <ul className="max-h-[120px] overflow-y-auto">
                         {requests.map((request) => (
-                            <div key={request._id} className="flex justify-between items-center">
+                            <div key={request._id} className=" space-y-1 flex justify-between items-center">
                                 <span className="font-bold">{request.firstName} {request.lastName}</span>
                                 <div className="justify-end space-x-1">
                                     <Button size="sm" color="success" variant="flat" onClick={() => handleAcceptRequest(request._id)}>Accept</Button>
@@ -123,7 +123,7 @@ export default function notifications() {
                 </div>
                 <hr className="mt-2 mb-2"/>
                 {notifications.length > 0 ? (
-                    <ul>
+                    <ul className="max-h-[420px] overflow-y-auto">
                         {notifications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((notification) => (
                             <div
                                 key={notification._id}
