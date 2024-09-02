@@ -60,25 +60,6 @@ function Post({ post, user_friendsId}) {
         };
     }, [user, post._id]);
 
-    // useEffect(() => {
-    //     // Fetch the user's friends list from the backend or any relevant source
-    //     const fetchUserFriends = async () => {
-    //         if (!user?.userId) return;
-            
-    //         try {
-    //             // Replace this with your actual API call to fetch friends' IDs
-    //             const response = await fetch(`/api/friends/list`);
-    //             const friendsData = await response.json();
-    //             setUserFriendsId(friendsData.map(friend => friend._id)); // Assuming friendsData is an array of friend objects
-
-    //         } catch (error) {
-    //             console.error("Error fetching friends list:", error);
-    //         }
-    //     };
-
-    //     fetchUserFriends();
-    // }, [user]);
-
     useEffect(() => {
         // Check if the post was liked by a friend
         const checkLikedByFriend = () => {

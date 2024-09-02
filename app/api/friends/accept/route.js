@@ -1,4 +1,3 @@
-// app/api/friends/accept/route.js
 import { getServerSession } from "next-auth";
 import User from "@/models/user";
 import { connectMongoDB } from "@/lib/mongodb";

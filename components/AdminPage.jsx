@@ -65,55 +65,57 @@ export default function AdminPage() {
             <p className="mb-4">Welcome, {session.user.firstName}!</p>
             <h2 className="text-xl font-semibold mb-4">User List</h2>
             <div className="bg-white p-4 rounded-xl shadow-sm">
-                {users.length === 0 ? (
-                    <div>No users found.</div>
-                ) : (
-                    <table className="w-full border-collapse mb-4">
-                        <thead>
-                            <tr>
-                                <th className="p-2 text-left">Select</th>
-                                <th className="p-2 text-left">Profile</th>
-                                <th className="p-2 text-left">Full Name</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {users.map((user) => (
-                                <tr key={user._id} className="border-t">
-                                    <td className="p-2">
-                                        <input
-                                            type="checkbox"
-                                            onChange={() => handleSelectUser(user._id)}
-                                            checked={selectedUsers.includes(user._id)}
-                                        />
-                                    </td>
-                                    <td className="p-2">
-                                        {user.profileImage ? (
-                                            <Avatar
-                                                isBordered
-                                                color="primary"
-                                                size="sm"
-                                                radius="md"
-                                                src={user.profileImage}
-                                            />
-                                        ) : (
-                                            <Avatar
-                                                isBordered
-                                                color=""
-                                                size="sm"
-                                                radius="md"
-                                                name={user.firstName.charAt(0) + user.lastName.charAt(0)}
-                                            />
-                                        )}
-                                    </td>
-                                    <td className="p-2">
-                                        {user.firstName} {user.lastName}
-                                    </td>
+                <div className="max-h-[482px] overflow-y-auto">
+                    {users.length === 0 ? (
+                        <div>No users found.</div>
+                    ) : (
+                        <table className="w-full border-collapse mb-4">
+                            <thead>
+                                <tr>
+                                    <th className="p-2 text-left">Select</th>
+                                    <th className="p-2 text-left">Profile</th>
+                                    <th className="p-2 text-left">Full Name</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                )}
-                <div className="flex gap-4 justify-end">
+                            </thead>
+                            <tbody>
+                                {users.map((user) => (
+                                    <tr key={user._id} className="border-t">
+                                        <td className="p-2">
+                                            <input
+                                                type="checkbox"
+                                                onChange={() => handleSelectUser(user._id)}
+                                                checked={selectedUsers.includes(user._id)}
+                                            />
+                                        </td>
+                                        <td className="p-2">
+                                            {user.profileImage ? (
+                                                <Avatar
+                                                    isBordered
+                                                    color="primary"
+                                                    size="sm"
+                                                    radius="md"
+                                                    src={user.profileImage}
+                                                />
+                                            ) : (
+                                                <Avatar
+                                                    isBordered
+                                                    color=""
+                                                    size="sm"
+                                                    radius="md"
+                                                    name={user.firstName.charAt(0) + user.lastName.charAt(0)}
+                                                />
+                                            )}
+                                        </td>
+                                        <td className="p-2">
+                                            {user.firstName} {user.lastName}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+                </div>
+                <div className="mt-2 flex gap-4 justify-end">
                     <Button
                         color="primary"
                         size="md"

@@ -73,11 +73,14 @@ export default function SignUpForm() {
                 body: formData
             });
 
+            const data = await res.json();
+
             if (res.ok) {
                 const form = e.target;
                 form.reset();
                 router.push("/signin");
             } else {
+                setError(data.message); // Display the error message from the API
                 console.log("Error during sign up");
             }
             
