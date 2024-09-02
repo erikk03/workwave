@@ -54,8 +54,8 @@ async function calculateRecommendationsForUser(userId, numFactors = 2) {
     }));
 
     postRecommendations.sort((a, b) => b.score - a.score);
-
-    console.log("Post Recommendations:", postRecommendations);
+    // UNCOMMENT TO SEE POST SCORES <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    // console.log("Post Recommendations:", postRecommendations);
 
     return postRecommendations;
 }

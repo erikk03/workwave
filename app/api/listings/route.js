@@ -97,8 +97,8 @@ async function calculateRecommendationsForUser(userId, numFactors = 2) {
 
     // Sort recommendations by score in descending order
     userRecommendations.sort((a, b) => b.score - a.score);
-
-    console.log("User Recommendations:", userRecommendations);
+    // UNCOMMMENT FOR LISTING SCORES <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    // console.log("User Recommendations:", userRecommendations);
 
     return userRecommendations;
 }

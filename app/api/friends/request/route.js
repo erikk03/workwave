@@ -28,12 +28,10 @@ export async function POST(req) {
         }
 
         if (user.friends.includes(targetUserId)) {
-            console.error("123123123d");
             return new Response("Already a friend", { status: 400 });
         }
 
         if (targetUser.pendingRequests.includes(session.user.userId)) {
-            console.error("T");
             return new Response("Friend request already sent", { status: 400 });
         }
 

@@ -25,8 +25,8 @@ export async function PUT(req, { params }) {
 
         // Check if the post has already been viewed by the user recently
         const lastView = post.views?.find((view) => view.userId === userId);
-        // const oneMinuteAgo = new Date(Date.now() - 60 * 1000);
-        if (lastView ) {//&& new Date(lastView.timestamp) > oneMinuteAgo
+        
+        if (lastView ) {
             return NextResponse.json({ message: 'View already logged recently.' }, { status: 200 });
         }
 
@@ -36,7 +36,7 @@ export async function PUT(req, { params }) {
 
         // Increment interaction count
         await PostInteraction.findOneAndUpdate(
-            { userId: userId, postId: post_id }, // Ensure correct use of `post_id`
+            { userId: userId, postId: post_id },
             { $inc: { interaction: 1 } },
             { upsert: true }
         );

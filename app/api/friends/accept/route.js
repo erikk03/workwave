@@ -13,8 +13,6 @@ export async function POST(req) {
         await connectMongoDB();
 
         const { requesterId } = await req.json();
-        
-        console.log(":::", requesterId);
 
         if (!requesterId) {
             return new Response("Requester ID is required", { status: 400 });

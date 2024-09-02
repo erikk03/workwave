@@ -16,8 +16,6 @@ export async function GET() {
 
         if (!user) return new Response("User not found", { status: 404 });
 
-        // const requests = await User.find({ _id: { $in: user.pendingRequests } }).select('firstName lastName _id');
-
          // Use lean() to convert Mongoose documents to plain JavaScript objects
          const requests = await User.find({ _id: { $in: user.pendingRequests } })
          .select('firstName lastName _id')
