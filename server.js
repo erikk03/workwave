@@ -12,8 +12,8 @@ app.prepare().then(() => {
 
   // Define your SSL certificate and key
   const options = {
-    key: fs.readFileSync('certificates/server.key'),
-    cert: fs.readFileSync('certificates/server.crt')
+    key: fs.readFileSync('localhost.key'),
+    cert: fs.readFileSync('localhost.crt')
   };
 
 
