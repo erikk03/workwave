@@ -2,7 +2,7 @@
 import { getServerSession } from "next-auth";
 import { connectMongoDB } from "@/lib/mongodb"; // Adjust import path as needed
 import Conversation from "@/models/conversation"; // Adjust import path as needed
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function GET(req, res) {
   // Connect to MongoDB
@@ -21,7 +21,6 @@ export async function GET(req, res) {
     const conversations = await Conversation.find({
       participants: userId
     }).populate('participants', '_id firstName lastName profileImage') // Populate participant details if needed
-    //   .populate('lastMessage'); // Optionally populate last message
 
     // Return the conversations as JSON
     return new Response(JSON.stringify(conversations), { status: 200 });

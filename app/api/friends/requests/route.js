@@ -1,8 +1,10 @@
+export const dynamic = 'force-dynamic';
+
 // app/api/friends/requests/route.js
 import { getServerSession } from "next-auth";
 import User from "@/models/user";
 import { connectMongoDB } from "@/lib/mongodb";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function GET() {
     try {
@@ -15,8 +17,6 @@ export async function GET() {
         const user = await User.findById(session.user.userId);
 
         if (!user) return new Response("User not found", { status: 404 });
-
-        // const requests = await User.find({ _id: { $in: user.pendingRequests } }).select('firstName lastName _id');
 
          // Use lean() to convert Mongoose documents to plain JavaScript objects
          const requests = await User.find({ _id: { $in: user.pendingRequests } })

@@ -5,7 +5,6 @@ import { NextResponse } from "next/server";
 export async function GET(request, { params }) {
     await connectMongoDB();
     try {
-        // const post = await Post.findById(params.post_id);
 
         const posts = await Post.getAllPosts();
         const post = posts.find((post) => post._id.toString() === params.post_id);

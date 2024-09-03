@@ -2,9 +2,8 @@ import { connectMongoDB } from "@/lib/mongodb";
 import { Listing } from "@/models/listing";
 import { MatrixFactorization } from "@/lib/matrixFactorization";
 import Interaction from '@/models/interaction';
-import { Application } from "@/models/application";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { NextResponse } from 'next/server';
 import User from "@/models/user"; 
 
@@ -97,8 +96,8 @@ async function calculateRecommendationsForUser(userId, numFactors = 2) {
 
     // Sort recommendations by score in descending order
     userRecommendations.sort((a, b) => b.score - a.score);
-
-    console.log("User Recommendations:", userRecommendations);
+    // UNCOMMMENT FOR LISTING SCORES <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    // console.log("User Recommendations:", userRecommendations);
 
     return userRecommendations;
 }
