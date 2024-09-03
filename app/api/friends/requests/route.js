@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 // app/api/friends/requests/route.js
 import { getServerSession } from "next-auth";
 import User from "@/models/user";

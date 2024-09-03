@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getServerSession } from "next-auth";
 import Post from "@/models/post";
 import { connectMongoDB } from "@/lib/mongodb";
