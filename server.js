@@ -12,11 +12,11 @@ app.prepare().then(() => {
 
   // Define your SSL certificate and key
   const options = {
-    key: fs.readFileSync('localhost-key.pem'),
-    cert: fs.readFileSync('localhost.pem')
+    key: fs.readFileSync('certificates/server.key'),
+    cert: fs.readFileSync('certificates/server.crt')
   };
 
-  // Serve your Next.js app
+
   server.all('*', (req, res) => {
     return handle(req, res);
   });
