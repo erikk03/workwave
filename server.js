@@ -10,10 +10,10 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
   const server = express();
 
-  // Define your SSL certificate and key
+  // Define SSL certificate and key
   const options = {
-    key: fs.readFileSync('certificates/server.key'),
-    cert: fs.readFileSync('certificates/server.crt')
+    key: fs.readFileSync('localhost-key.pem'),
+    cert: fs.readFileSync('localhost.pem')
   };
 
 
