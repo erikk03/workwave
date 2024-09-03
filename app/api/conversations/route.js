@@ -2,7 +2,7 @@
 import { getServerSession } from "next-auth";
 import { connectMongoDB } from "@/lib/mongodb"; // Adjust import path as needed
 import Conversation from "@/models/conversation"; // Adjust import path as needed
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function GET(req, res) {
   // Connect to MongoDB

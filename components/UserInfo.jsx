@@ -24,7 +24,10 @@ export default function UserProfile({ userId, initialUser }) {
 	const isProfileOwner = userId === sessionUserId;
 
 	const getFieldVisibility = (field) => {
-		return isProfileOwner || profileUser.visibilitySettings[field];
+		if(!profileUser.visibilitySettings)
+			return isProfileOwner;
+
+		return isProfileOwner || profileUser?.visibilitySettings[field];
 	};
 
 	useEffect(() => {
@@ -106,20 +109,16 @@ export default function UserProfile({ userId, initialUser }) {
 					name={profileUser.firstName.charAt(0) + profileUser.lastName.charAt(0)}
 					/>
 				)}
-				{getFieldVisibility('firstName') && (
-					<div>
-						<span className="font-bold text-3xl">
-							{profileUser.firstName} {profileUser.lastName}
-						</span>
-					</div>
-				)}
-				{getFieldVisibility('lastName') && (
-					<div>
-						<span className=" text-lg">
-							{profileUser.email}
-						</span>
-					</div>
-				)}
+				<div>
+					<span className="font-bold text-3xl">
+						{profileUser.firstName} {profileUser.lastName}
+					</span>
+				</div>
+				<div>
+					<span className=" text-lg">
+						{profileUser.email}
+					</span>
+				</div>
 			</div>
 
 			{getFieldVisibility('cv') && profileUser.cv && (

@@ -4,7 +4,7 @@ import  Interaction  from "@/models/interaction";
 import { getServerSession } from "next-auth"
 import User from "@/models/user";
 import { NextResponse } from 'next/server';
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function POST(req) {
     try {

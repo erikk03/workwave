@@ -2,9 +2,8 @@ import { connectMongoDB } from "@/lib/mongodb";
 import { Listing } from "@/models/listing";
 import { MatrixFactorization } from "@/lib/matrixFactorization";
 import Interaction from '@/models/interaction';
-import { Application } from "@/models/application";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { NextResponse } from 'next/server';
 import User from "@/models/user"; 
 

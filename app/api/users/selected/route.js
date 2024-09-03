@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import User from '../../../../models/user'; // Adjust path if necessary
 import Post from "@/models/post";
 import { connectMongoDB } from "@/lib/mongodb";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Listing } from '@/models/listing';
 import { Comment } from '@/models/comment';
 

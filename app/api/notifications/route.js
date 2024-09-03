@@ -4,7 +4,7 @@ import { connectMongoDB } from "@/lib/mongodb";
 import Post from "@/models/post";
 import { Listing } from "@/models/listing"; // Import Listing model
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {

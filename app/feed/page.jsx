@@ -3,11 +3,10 @@ import PostForm from "@/components/PostForm";
 import PostFeed from "@/components/PostFeed";
 import SomeUserInfo from "@/components/SomeUserInfo";
 import Connections from "@/components/Connections";
-import Post from "@/models/post";
 
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { connectMongoDB } from "@/lib/mongodb";
 import { updateMediaUrls } from "@/lib/azureblob";
 

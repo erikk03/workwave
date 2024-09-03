@@ -2,7 +2,7 @@ import React from "react";
 import Post from "@/models/post";
 import { getServerSession } from "next-auth";
 import { default as PostComponent } from "./Post";
-import { authOptions } from "../app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import User from "@/models/user";
 import PostInteraction from "@/models/postInteraction";
 import { MatrixFactorization } from "@/lib/matrixPosts";

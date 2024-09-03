@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 import { getServerSession } from "next-auth";
 import Post from "@/models/post";
 import { connectMongoDB } from "@/lib/mongodb";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function GET(req) {
     try {
